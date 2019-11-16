@@ -26420,7 +26420,7 @@ int lua_cocos2dx_ui_Helper_seekActionWidgetByActionTag(lua_State* tolua_S)
 #endif
     return 0;
 }
-int lua_cocos2dx_ui_Helper_seekWidgetByName(lua_State* tolua_S)
+int lua_cocos2dx_ui_Helper_seekNodeByName(lua_State* tolua_S)
 {
     int argc = 0;
     bool ok  = true;
@@ -26437,20 +26437,20 @@ int lua_cocos2dx_ui_Helper_seekWidgetByName(lua_State* tolua_S)
 
     if (argc == 2)
     {
-        cocos2d::ui::Widget* arg0;
+        cocos2d::Node* arg0;
         std::string arg1;
-        ok &= luaval_to_object<cocos2d::ui::Widget>(tolua_S, 2, "ccui.Widget",&arg0, "ccui.Helper:seekWidgetByName");
-        ok &= luaval_to_std_string(tolua_S, 3,&arg1, "ccui.Helper:seekWidgetByName");
+        ok &= luaval_to_object<cocos2d::Node>(tolua_S, 2, "cc.Node",&arg0, "ccui.Helper:seekNodeByName");
+        ok &= luaval_to_std_string(tolua_S, 3,&arg1, "ccui.Helper:seekNodeByName");
         if(!ok)
         {
-            tolua_error(tolua_S,"invalid arguments in function 'lua_cocos2dx_ui_Helper_seekWidgetByName'", nullptr);
+            tolua_error(tolua_S,"invalid arguments in function 'lua_cocos2dx_ui_Helper_seekNodeByName'", nullptr);
             return 0;
         }
-        cocos2d::ui::Widget* ret = cocos2d::ui::Helper::seekWidgetByName(arg0, arg1);
-        object_to_luaval<cocos2d::ui::Widget>(tolua_S, "ccui.Widget",(cocos2d::ui::Widget*)ret);
+        cocos2d::Node* ret = cocos2d::ui::Helper::seekNodeByName(arg0, arg1);
+        object_to_luaval<cocos2d::Node>(tolua_S, "cc.Node",(cocos2d::Node*)ret);
         return 1;
     }
-    luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d\n ", "ccui.Helper:seekWidgetByName",argc, 2);
+    luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d\n ", "ccui.Helper:seekNodeByName",argc, 2);
     return 0;
 #if COCOS2D_DEBUG >= 1
     tolua_lerror:
@@ -26586,7 +26586,7 @@ int lua_register_cocos2dx_ui_Helper(lua_State* tolua_S)
         tolua_function(tolua_S,"convertBoundingBoxToScreen", lua_cocos2dx_ui_Helper_convertBoundingBoxToScreen);
         tolua_function(tolua_S,"changeLayoutSystemActiveState", lua_cocos2dx_ui_Helper_changeLayoutSystemActiveState);
         tolua_function(tolua_S,"seekActionWidgetByActionTag", lua_cocos2dx_ui_Helper_seekActionWidgetByActionTag);
-        tolua_function(tolua_S,"seekWidgetByName", lua_cocos2dx_ui_Helper_seekWidgetByName);
+        tolua_function(tolua_S,"seekNodeByName", lua_cocos2dx_ui_Helper_seekNodeByName);
         tolua_function(tolua_S,"seekWidgetByTag", lua_cocos2dx_ui_Helper_seekWidgetByTag);
         tolua_function(tolua_S,"restrictCapInsetRect", lua_cocos2dx_ui_Helper_restrictCapInsetRect);
         tolua_function(tolua_S,"doLayout", lua_cocos2dx_ui_Helper_doLayout);

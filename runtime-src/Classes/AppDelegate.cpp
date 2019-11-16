@@ -42,10 +42,6 @@ using namespace cocos2d::experimental;
 using namespace CocosDenshion;
 #endif
 
-//FYD---BEIGIN
-#include "lua_custom_register.h"
-//FYD---ENDED
-
 USING_NS_CC;
 using namespace std;
 
@@ -100,8 +96,6 @@ bool AppDelegate::applicationDidFinishLaunching()
 
     LuaStack* stack = engine->getLuaStack();
     stack->setXXTEAKeyAndSign("2dxLua", strlen("2dxLua"), "XXTEA", strlen("XXTEA"));
-    
-    register_custom_function(L);
 
     //register custom function
     //LuaStack* stack = engine->getLuaStack();

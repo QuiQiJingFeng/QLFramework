@@ -62,7 +62,7 @@ Widget* Helper::seekWidgetByTag(Widget* root, int tag)
     return nullptr;
 }
 
-Widget* Helper::seekWidgetByName(Widget* root, const std::string& name)
+Node* Helper::seekNodeByName(Node* root, const std::string& name)
 {
     if (!root)
     {
@@ -75,10 +75,10 @@ Widget* Helper::seekWidgetByName(Widget* root, const std::string& name)
     const auto& arrayRootChildren = root->getChildren();
     for (auto& subWidget : arrayRootChildren)
     {
-        Widget* child = dynamic_cast<Widget*>(subWidget);
+        Node* child = dynamic_cast<Node*>(subWidget);
         if (child)
         {
-            Widget* res = seekWidgetByName(child,name);
+            Node* res = seekNodeByName(child,name);
             if (res != nullptr)
             {
                 return res;

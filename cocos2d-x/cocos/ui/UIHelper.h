@@ -65,7 +65,7 @@ public:
      * @param name      The widget name.
      * @return Widget instance pointer.
      */
-    static Widget* seekWidgetByName(Widget* root, const std::string& name);
+    static Node* seekNodeByName(Node* root, const std::string& name);
     
     /**
      * Find a widget with a specific action tag from root widget
