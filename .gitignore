@@ -1,2 +1,4 @@
 cocos2d-x/build
 cocos2d-x/cocos/platform/android/libcocos2dx
+runtime-src/proj.android/.idea
+SDK
