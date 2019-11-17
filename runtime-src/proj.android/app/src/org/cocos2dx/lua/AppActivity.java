@@ -26,7 +26,11 @@ THE SOFTWARE.
 ****************************************************************************/
 package org.cocos2dx.lua;
 
+import android.content.Intent;
 import android.os.Bundle;
+
+import com.mengya.game.BaiduLocationService;
+
 import org.cocos2dx.lib.Cocos2dxActivity;
 
 public class AppActivity extends Cocos2dxActivity{
@@ -44,6 +48,23 @@ public class AppActivity extends Cocos2dxActivity{
         }
 
         // DO OTHER INITIALIZATION BELOW
+        BaiduLocationService.init(this);
         
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        BaiduLocationService.onActivityResult(requestCode,resultCode,data);
+    }
+
+    /**
+     * Android6.0申请权限的回调方法
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        BaiduLocationService.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
 }
+
