@@ -45,6 +45,10 @@ using namespace CocosDenshion;
 USING_NS_CC;
 using namespace std;
 
+//FYD BEGIN
+#include "runtime/Runtime.h"
+//FYD ENDED
+
 AppDelegate::AppDelegate()
 {
 }
@@ -106,7 +110,12 @@ bool AppDelegate::applicationDidFinishLaunching()
 #endif
     FileUtils::getInstance()->addSearchPath("src");
     FileUtils::getInstance()->addSearchPath("res");
-    if (engine->executeScriptFile("main.lua"))
+    
+    auto file = RuntimeEngine::getInstance()->getProjectConfig().getScriptFile();
+    //file "$(PROJDIR)/main.lua"
+    int pos = file.find_last_of("/");
+    auto str = file.substr(pos+1);
+    if (engine->executeScriptFile(str.c_str()))
     {
         return false;
     }
