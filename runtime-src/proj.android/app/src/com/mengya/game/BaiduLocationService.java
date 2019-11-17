@@ -156,7 +156,7 @@ public class BaiduLocationService {
     }
 
     //开启GPS服务
-    public static void start(){
+    public static void start(int callBack){
         synchronized (_objLock) {
             if (_client == null) {
                 _client = new LocationClient(_activity);
@@ -169,6 +169,7 @@ public class BaiduLocationService {
                 _client.start();
             }
         }
+        _callBack = callBack;
     }
     //关闭GPS服务
     public static void stop(){
