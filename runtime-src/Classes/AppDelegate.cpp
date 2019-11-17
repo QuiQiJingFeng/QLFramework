@@ -46,7 +46,9 @@ USING_NS_CC;
 using namespace std;
 
 //FYD BEGIN
+#if (CC_TARGET_PLATFORM == CCPLATFORM_MAC || CC_TARGET_PLATFORM == CCPLATFORM_WIN)
 #include "runtime/Runtime.h"
+#endif
 //FYD ENDED
 
 AppDelegate::AppDelegate()
@@ -110,11 +112,13 @@ bool AppDelegate::applicationDidFinishLaunching()
 #endif
     FileUtils::getInstance()->addSearchPath("src");
     FileUtils::getInstance()->addSearchPath("res");
-    
+    string str = "main.lua";
+#if (CC_TARGET_PLATFORM == CCPLATFORM_MAC || CC_TARGET_PLATFORM == CCPLATFORM_WIN)
     auto file = RuntimeEngine::getInstance()->getProjectConfig().getScriptFile();
     //file "$(PROJDIR)/main.lua"
     int pos = file.find_last_of("/");
-    auto str = file.substr(pos+1);
+    str = file.substr(pos+1);
+#endif
     if (engine->executeScriptFile(str.c_str()))
     {
         return false;

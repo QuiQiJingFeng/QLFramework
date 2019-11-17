@@ -4,9 +4,8 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion PROP_COMPILE_SDK_VERSION.toInteger()
-
     defaultConfig {
-        applicationId "com.mengya.game"
+        applicationId "com.queqijingfeng"
         minSdkVersion PROP_MIN_SDK_VERSION
         targetSdkVersion PROP_TARGET_SDK_VERSION
         versionCode 1
@@ -23,15 +22,13 @@ android {
                                         project.file("../../../cocos2d-x/cocos").absolutePath,
                                         project.file("../../../cocos2d-x/external").absolutePath]
                     if (OperatingSystem.current().isWindows()) {
-                        module_paths = module_paths.collect {it.replaceAll('\\\\', '/')}
+                        module_paths = module_paths.collect { it.replaceAll('\\\\', '/') }
                         arguments 'NDK_MODULE_PATH=' + module_paths.join(";")
-                    }
-                    else {
+                    } else {
                         arguments 'NDK_MODULE_PATH=' + module_paths.join(':')
                     }
                 }
-            }
-            else if (PROP_BUILD_TYPE == 'cmake') {
+            } else if (PROP_BUILD_TYPE == 'cmake') {
                 cmake {
                     arguments "-DCMAKE_FIND_ROOT_PATH=", "-DANDROID_STL=c++_static", "-DANDROID_TOOLCHAIN=clang", "-DANDROID_ARM_NEON=TRUE"
                     cppFlags "-frtti -fexceptions -fsigned-char"
@@ -41,33 +38,29 @@ android {
 
         ndk {
             abiFilters = []
-            abiFilters.addAll(PROP_APP_ABI.split(':').collect{it as String})
+            abiFilters.addAll(PROP_APP_ABI.split(':').collect { it as String })
         }
     }
-
     sourceSets.main {
         java.srcDir "src"
         res.srcDir "res"
         jniLibs.srcDir "libs"
         manifest.srcFile "AndroidManifest.xml"
     }
-
     externalNativeBuild {
         if (PROP_BUILD_TYPE == 'ndk-build') {
             ndkBuild {
                 path "jni/Android.mk"
             }
-        }
-        else if (PROP_BUILD_TYPE == 'cmake') {
+        } else if (PROP_BUILD_TYPE == 'cmake') {
             cmake {
                 path "../../../../CMakeLists.txt"
             }
         }
     }
-
     signingConfigs {
 
-       release {
+        release {
             if (project.hasProperty("RELEASE_STORE_FILE")) {
                 storeFile file(RELEASE_STORE_FILE)
                 storePassword RELEASE_STORE_PASSWORD
@@ -76,7 +69,6 @@ android {
             }
         }
     }
-
     buildTypes {
         release {
             debuggable false
@@ -107,6 +99,7 @@ android {
             }
         }
     }
+    buildToolsVersion '27.0.3'
 }
 
 def getCocosCommandPath() {
@@ -254,6 +247,6 @@ android.applicationVariants.all { variant ->
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(':libcocos2dx')
 }
