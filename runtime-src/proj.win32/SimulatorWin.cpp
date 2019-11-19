@@ -56,7 +56,8 @@
 #include "platform/win32/PlayerMenuServiceWin.h"
 
 // define 1 to open console ui and setup windows system menu, 0 to disable
-#define SIMULATOR_WITH_CONSOLE_AND_MENU 0
+//是否开启命令行输出窗口
+#define SIMULATOR_WITH_CONSOLE_AND_MENU 1
 
 USING_NS_CC;
 
