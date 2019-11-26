@@ -31,4 +31,7 @@ public class Cocos2dxLuaJavaBridge
     public static native int callLuaGlobalFunctionWithString(String luaFunctionName, String value);
     public static native int retainLuaFunction(int luaFunctionId);
     public static native int releaseLuaFunction(int luaFunctionId);
+
+    public static native int callLuaFunctionWithStringSafe(int luaFunctionId, String value);
+    public static native int callLuaGlobalFunctionWithStringSafe(String luaFunctionName, String value);
 }

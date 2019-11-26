@@ -37,3 +37,15 @@
 #-dontwarn android.webkit.WebView
 #-dontwarn android.net.http.SslError
 #-dontwarn android.webkit.WebViewClient
+
+
+#忽略警告
+#alibaba json
+-ignorewarnings
+-keep class javax.ws.rs.** { *; }
+-dontwarn com.alibaba.fastjson.**
+-keep class com.alibaba.fastjson.** { *; }
+
+#baidu
+-dontwarn com.baidu.**
+-keep class com.baidu.** { *; }

@@ -27,21 +27,19 @@ class  MyLocationListener extends BDAbstractLocationListener {
         if (bdLocation == null) {
             return;
         }
-
-        StringBuffer sb = new StringBuffer(256);
-        sb.append("Latitude:");
-        sb.append(bdLocation.getLatitude());
-        sb.append("Longitude");
-        sb.append(bdLocation.getLongitude()+"\n");
-
         Map map = new HashMap();
-        map.put("Latitude", bdLocation.getLatitude());
-        map.put("Longitude", bdLocation.getLongitude());
-        int callBack = BaiduLocationService.getCallBack();
+        map.put("locType", bdLocation.getLocType());
+        map.put("latitude", bdLocation.getLatitude());
+        map.put("longitude", bdLocation.getLongitude());
+        map.put("addr", bdLocation.getAddrStr());
+        map.put("country", bdLocation.getCountry());
+        map.put("province", bdLocation.getProvince());
+        map.put("city", bdLocation.getCity());
+        map.put("district", bdLocation.getDistrict());
+        map.put("street", bdLocation.getStreet());
+
         String locationStr = JSON.toJSONString(map);
-        Cocos2dxLuaJavaBridge.callLuaFunctionWithString(callBack,locationStr);
-        Cocos2dxLuaJavaBridge.releaseLuaFunction(callBack);
-        BaiduLocationService.resetCallBack();
+        BaiduLocationService.invokeCallBack(locationStr);
     }
 }
 
@@ -61,11 +59,14 @@ public class BaiduLocationService {
     private static MyLocationListener _listener;
 
     public static void init(Activity activity){
+        _activity = activity;
         _objLock = new Object();
         _customOption = new LocationClientOption();
-
-        _listener = new MyLocationListener();
-        registerListener(_listener);
+        synchronized (_objLock) {
+            if (_client == null) {
+                _client = new LocationClient(_activity);
+            }
+        }
     }
 
     public static void initOptions(String str){
@@ -120,7 +121,9 @@ public class BaiduLocationService {
             // 可选，默认false，设置定位时是否需要海拔信息，默认不需要，除基础定位版本都可用
             _customOption.setIsNeedAltitude((boolean)hashMap.get("NeedAltitude"));
         }
-
+        _client.setLocOption(_customOption);
+        _listener = new MyLocationListener();
+        registerListener(_listener);
     }
 
     //检查GPS是否开启 6.0还需要判断权限是否开启
@@ -158,18 +161,14 @@ public class BaiduLocationService {
     //开启GPS服务
     public static void start(int callBack){
         synchronized (_objLock) {
-            if (_client == null) {
-                _client = new LocationClient(_activity);
-                _client.setLocOption(_customOption);
-            }
-        }
-
-        synchronized (_objLock) {
             if (_client != null && !_client.isStarted()) {
                 _client.start();
             }
         }
-        _callBack = callBack;
+        if(_callBack != callBack){
+            _callBack = callBack;
+            Cocos2dxLuaJavaBridge.retainLuaFunction(_callBack);
+        }
     }
     //关闭GPS服务
     public static void stop(){
@@ -215,18 +214,20 @@ public class BaiduLocationService {
     //开始定位
     public static void requestLocation(int callBack) {
         if (_client != null) {
-            _callBack = callBack;
-            Cocos2dxLuaJavaBridge.retainLuaFunction(_callBack);
+            if(_callBack != callBack){
+                _callBack = callBack;
+                Cocos2dxLuaJavaBridge.retainLuaFunction(_callBack);
+            }
             _client.requestLocation();
         }
     }
 
-    public static int getCallBack(){
-        return _callBack;
-    }
-
-    public static void resetCallBack(){
-        _callBack = 0;
+    public static void invokeCallBack(String locationStr){
+        Cocos2dxLuaJavaBridge.callLuaFunctionWithStringSafe(_callBack,locationStr);
+        if(_customOption.getScanSpan() < 1000){
+            Cocos2dxLuaJavaBridge.releaseLuaFunction(_callBack);
+            _callBack = 0;
+        }
     }
 
     /***
@@ -238,7 +239,7 @@ public class BaiduLocationService {
 
     public static boolean registerListener(BDAbstractLocationListener listener) {
         boolean isSuccess = false;
-        if (listener != null) {
+        if (isSuccess == false && listener != null) {
             _client.registerLocationListener(listener);
             isSuccess = true;
         }

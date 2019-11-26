@@ -12,7 +12,7 @@
 		<key>libluacocos2d iOS.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>6</integer>
+			<integer>4</integer>
 		</dict>
 		<key>libluacocos2d tvOS.xcscheme</key>
 		<dict>

@@ -34,6 +34,7 @@
 #define  LOG_TAG    "Cocos2dxLuaJavaBridge_java"
 #define  LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG,LOG_TAG,__VA_ARGS__)
 
+#include "cocos2d.h"
 extern "C" {
 
 JNIEXPORT jint JNICALL Java_org_cocos2dx_lib_Cocos2dxLuaJavaBridge_callLuaFunctionWithString
@@ -49,9 +50,31 @@ JNIEXPORT jint JNICALL Java_org_cocos2dx_lib_Cocos2dxLuaJavaBridge_callLuaGlobal
 {
     std::string functionNameStr = cocos2d::StringUtils::getStringUTFCharsJNI(env, luaFunctionName);
     std::string valueStr = cocos2d::StringUtils::getStringUTFCharsJNI(env, value);
-    
+
     int ret = LuaJavaBridge::callLuaGlobalFunction(functionNameStr.c_str(), valueStr.c_str());
     return ret;
+}
+
+JNIEXPORT jint JNICALL Java_org_cocos2dx_lib_Cocos2dxLuaJavaBridge_callLuaFunctionWithStringSafe
+        (JNIEnv *env, jclass cls, jint functionId, jstring value)
+{
+    std::string strValue = cocos2d::StringUtils::getStringUTFCharsJNI(env, value);
+    cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([functionId,strValue]{
+        LuaJavaBridge::callLuaFunctionById(functionId, strValue.c_str());
+    });
+
+    return 0;
+}
+
+JNIEXPORT jint JNICALL Java_org_cocos2dx_lib_Cocos2dxLuaJavaBridge_callLuaGlobalFunctionWithStringSafe
+        (JNIEnv *env, jclass cls, jstring luaFunctionName, jstring value)
+{
+    std::string functionNameStr = cocos2d::StringUtils::getStringUTFCharsJNI(env, luaFunctionName);
+    std::string valueStr = cocos2d::StringUtils::getStringUTFCharsJNI(env, value);
+    cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([functionNameStr,valueStr]{
+        LuaJavaBridge::callLuaGlobalFunction(functionNameStr.c_str(), valueStr.c_str());
+    });
+    return 0;
 }
 
 JNIEXPORT jint JNICALL Java_org_cocos2dx_lib_Cocos2dxLuaJavaBridge_retainLuaFunction

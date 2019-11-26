@@ -48,6 +48,22 @@ JNIEXPORT jint JNICALL Java_org_cocos2dx_lib_Cocos2dxLuaJavaBridge_callLuaGlobal
 
 /*
  * Class:     Java_org_cocos2dx_lib_Cocos2dxLuaJavaBridge
+ * Method:    callLuaFunctionWithString
+ * Signature: (ILjava/lang/String;)I
+ */
+JNIEXPORT jint JNICALL Java_org_cocos2dx_lib_Cocos2dxLuaJavaBridge_callLuaFunctionWithStringSafe
+        (JNIEnv *, jclass, jint, jstring);
+
+/*
+ * Class:     Java_org_cocos2dx_lib_Cocos2dxLuaJavaBridge
+ * Method:    callLuaGlobalFunctionWithString
+ * Signature: (Ljava/lang/String;Ljava/lang/String;)I
+ */
+JNIEXPORT jint JNICALL Java_org_cocos2dx_lib_Cocos2dxLuaJavaBridge_callLuaGlobalFunctionWithStringSafe
+        (JNIEnv *env, jclass, jstring, jstring);
+
+/*
+ * Class:     Java_org_cocos2dx_lib_Cocos2dxLuaJavaBridge
  * Method:    retainLuaFunction
  * Signature: (I)I
  */
