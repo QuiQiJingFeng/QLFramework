@@ -10,6 +10,9 @@
     <Filter Include="resource">
       <UniqueIdentifier>{2d1d0979-58cd-4ab6-b91c-13650158f1fa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Classes\luaprotobuf">
+      <UniqueIdentifier>{79a92370-1818-4fcc-aff7-68d933ed0092}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\AppDelegate.h">
@@ -26,6 +29,9 @@
     <ClInclude Include="targetver.h">
       <Filter>win32</Filter>
     </ClInclude>
+    <ClInclude Include="..\Classes\luaprotobuf\pb.h">
+      <Filter>Classes\luaprotobuf</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Classes\AppDelegate.cpp">
@@ -37,6 +43,9 @@
     <ClCompile Include="SimulatorWin.cpp" />
     <ClCompile Include="stdafx.cpp">
       <Filter>win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\luaprotobuf\pb.c">
+      <Filter>Classes\luaprotobuf</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

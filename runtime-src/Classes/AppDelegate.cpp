@@ -49,6 +49,8 @@ using namespace std;
 #if (CC_TARGET_PLATFORM == CCPLATFORM_MAC || CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
 #include "runtime/Runtime.h"
 #endif
+
+extern "C" { int luaopen_pblib(lua_State *L); }
 //FYD ENDED
 
 AppDelegate::AppDelegate()
@@ -99,6 +101,9 @@ bool AppDelegate::applicationDidFinishLaunching()
     lua_module_register(L);
 
     register_all_packages();
+
+	//FYD
+	luaopen_pblib(L);
 
     LuaStack* stack = engine->getLuaStack();
     stack->setXXTEAKeyAndSign("2dxLua", strlen("2dxLua"), "XXTEA", strlen("XXTEA"));
