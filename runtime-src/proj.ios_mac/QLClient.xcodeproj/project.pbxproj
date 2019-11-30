@@ -17,6 +17,8 @@
 		141D6801238A99A500FB1AC4 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 141D6800238A99A500FB1AC4 /* AdSupport.framework */; };
 		141D6807238A9D2100FB1AC4 /* BaiduLocationService.mm in Sources */ = {isa = PBXBuildFile; fileRef = 141D6806238A9D2100FB1AC4 /* BaiduLocationService.mm */; };
 		141D6809238AE08200FB1AC4 /* GameController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 141D6808238AE08100FB1AC4 /* GameController.framework */; };
+		14C6CA0B239219D100D472F1 /* pb.c in Sources */ = {isa = PBXBuildFile; fileRef = 14C6CA09239219D000D472F1 /* pb.c */; };
+		14C6CA0C239219D100D472F1 /* pb.c in Sources */ = {isa = PBXBuildFile; fileRef = 14C6CA09239219D000D472F1 /* pb.c */; };
 		15427CD3198F221400DC375D /* libcocos2d iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 15A8A4251834BDA200142BE0 /* libcocos2d iOS.a */; };
 		15427CD5198F222200DC375D /* libluacocos2d iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 15427CD2198F220600DC375D /* libluacocos2d iOS.a */; };
 		15427CEC198F24A600DC375D /* libluacocos2d Mac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 15427CC2198F220600DC375D /* libluacocos2d Mac.a */; };
@@ -185,6 +187,8 @@
 		141D6805238A9D2100FB1AC4 /* BaiduLocationService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaiduLocationService.h; sourceTree = "<group>"; };
 		141D6806238A9D2100FB1AC4 /* BaiduLocationService.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = BaiduLocationService.mm; sourceTree = "<group>"; };
 		141D6808238AE08100FB1AC4 /* GameController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameController.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS11.2.sdk/System/Library/Frameworks/GameController.framework; sourceTree = DEVELOPER_DIR; };
+		14C6CA09239219D000D472F1 /* pb.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = pb.c; path = ../Classes/luaprotobuf/pb.c; sourceTree = "<group>"; };
+		14C6CA0A239219D100D472F1 /* pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pb.h; path = ../Classes/luaprotobuf/pb.h; sourceTree = "<group>"; };
 		15A8A4031834BDA200142BE0 /* cocos2d_libs.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = cocos2d_libs.xcodeproj; path = "../../cocos2d-x/build/cocos2d_libs.xcodeproj"; sourceTree = "<group>"; };
 		15A8A4871834C90E00142BE0 /* libcurl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcurl.dylib; path = usr/lib/libcurl.dylib; sourceTree = SDKROOT; };
 		15C1568D1683131500D239F2 /* libcurl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcurl.a; path = "../../cocos2d-x/cocos2dx/platform/third_party/ios/libraries/libcurl.a"; sourceTree = "<group>"; };
@@ -309,6 +313,15 @@
 				141D6806238A9D2100FB1AC4 /* BaiduLocationService.mm */,
 			);
 			path = SDK;
+			sourceTree = "<group>";
+		};
+		14C6CA08239219BF00D472F1 /* luaprotobuf */ = {
+			isa = PBXGroup;
+			children = (
+				14C6CA09239219D000D472F1 /* pb.c */,
+				14C6CA0A239219D100D472F1 /* pb.h */,
+			);
+			name = luaprotobuf;
 			sourceTree = "<group>";
 		};
 		15A8A4041834BDA200142BE0 /* Products */ = {
@@ -452,6 +465,7 @@
 		F293BB7C15EB830F00256477 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				14C6CA08239219BF00D472F1 /* luaprotobuf */,
 				F293BB7E15EB831F00256477 /* AppDelegate.cpp */,
 				F293BB7F15EB831F00256477 /* AppDelegate.h */,
 			);
@@ -657,6 +671,7 @@
 				C07828FA18B4D72E00BD2287 /* SimulatorApp.mm in Sources */,
 				5023813317EBBCE400990C9B /* AppDelegate.cpp in Sources */,
 				9FF504851A5E87B100AFDA55 /* ConsoleWindowController.m in Sources */,
+				14C6CA0C239219D100D472F1 /* pb.c in Sources */,
 				C07828F818B4D72E00BD2287 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -668,6 +683,7 @@
 				5023812517EBBCAC00990C9B /* RootViewController.mm in Sources */,
 				F293BB9C15EB831F00256477 /* AppDelegate.cpp in Sources */,
 				5023812417EBBCAC00990C9B /* main.m in Sources */,
+				14C6CA0B239219D100D472F1 /* pb.c in Sources */,
 				5023811817EBBCAC00990C9B /* AppController.mm in Sources */,
 				141D6807238A9D2100FB1AC4 /* BaiduLocationService.mm in Sources */,
 			);
@@ -853,7 +869,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COMPRESS_PNG_FILES = NO;
 				ENABLE_BITCODE = NO;
-				FRAMEWORK_SEARCH_PATHS = "/Users/jingfeng/Desktop/test/QLClient/client-slgc/frameworks/BaiduLoc_iOSSDK_All_Bitcode_v1.8";
+				FRAMEWORK_SEARCH_PATHS = "/Users/jingfeng/Desktop/QLClient/client-slgc/frameworks/BaiduLoc_iOSSDK_All_Bitcode_v1.8";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ios/Prefix.pch;
@@ -895,10 +911,11 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COMPRESS_PNG_FILES = NO;
 				ENABLE_BITCODE = NO;
-				FRAMEWORK_SEARCH_PATHS = "/Users/jingfeng/Desktop/test/QLClient/client-slgc/frameworks/BaiduLoc_iOSSDK_All_Bitcode_v1.8";
+				FRAMEWORK_SEARCH_PATHS = "/Users/jingfeng/Desktop/QLClient/client-slgc/frameworks/BaiduLoc_iOSSDK_All_Bitcode_v1.8";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ios/Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
+				"GCC_PREPROCESSOR_DEFINITIONS[arch=*]" = "$(inherited)";
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../Classes/protobuf-lite",
 					"$(SRCROOT)/../Classes",

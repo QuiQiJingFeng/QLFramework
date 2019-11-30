@@ -50,7 +50,7 @@ using namespace std;
 #include "runtime/Runtime.h"
 #endif
 
-extern "C" { int luaopen_pblib(lua_State *L); }
+//extern "C" { int luaopen_pblib(lua_State *L); }
 //FYD ENDED
 
 AppDelegate::AppDelegate()
@@ -103,7 +103,7 @@ bool AppDelegate::applicationDidFinishLaunching()
     register_all_packages();
 
 	//FYD
-	luaopen_pblib(L);
+//    luaopen_pblib(L);
 
     LuaStack* stack = engine->getLuaStack();
     stack->setXXTEAKeyAndSign("2dxLua", strlen("2dxLua"), "XXTEA", strlen("XXTEA"));
