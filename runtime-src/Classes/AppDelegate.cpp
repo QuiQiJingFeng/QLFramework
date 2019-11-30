@@ -44,13 +44,12 @@ using namespace CocosDenshion;
 
 USING_NS_CC;
 using namespace std;
-
 //FYD BEGIN
 #if (CC_TARGET_PLATFORM == CCPLATFORM_MAC || CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
 #include "runtime/Runtime.h"
 #endif
 
-//extern "C" { int luaopen_pblib(lua_State *L); }
+extern "C" { int luaopen_pblib(lua_State *L); }
 //FYD ENDED
 
 AppDelegate::AppDelegate()
@@ -103,7 +102,7 @@ bool AppDelegate::applicationDidFinishLaunching()
     register_all_packages();
 
 	//FYD
-//    luaopen_pblib(L);
+    luaopen_pblib(L);
 
     LuaStack* stack = engine->getLuaStack();
     stack->setXXTEAKeyAndSign("2dxLua", strlen("2dxLua"), "XXTEA", strlen("XXTEA"));

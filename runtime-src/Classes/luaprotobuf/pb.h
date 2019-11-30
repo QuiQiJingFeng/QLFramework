@@ -348,7 +348,6 @@ PB_NS_END
 
 PB_NS_BEGIN
 
-
 /* conversions */
 
 PB_API uint32_t pb_encode_sint32(int32_t value)

@@ -25,21 +25,21 @@ PB_NS_BEGIN
 #define PB_SLICE     "pb.Slice"
 
 #define check_buffer(L,idx) ((pb_Buffer*)luaL_checkudata(L,idx,PB_BUFFER))
-#define test_buffer(L,idx)  ((pb_Buffer*)luaL_testudata(L,idx,PB_BUFFER))
+#define test_buffer(L,idx)  ((pb_Buffer*)luaL_testudataFix(L,idx,PB_BUFFER))
 #define check_slice(L,idx)  ((lpb_SliceEx*)luaL_checkudata(L,idx,PB_SLICE))
-#define test_slice(L,idx)   ((lpb_SliceEx*)luaL_testudata(L,idx,PB_SLICE))
+#define test_slice(L,idx)   ((lpb_SliceEx*)luaL_testudataFix(L,idx,PB_SLICE))
 #define return_self(L) { lua_settop(L, 1); return 1; }
 
 #if LUA_VERSION_NUM < 502
 #include <assert.h>
-
 # define LUA_OK        0
 # define lua_rawlen    lua_objlen
 # define luaL_setfuncs(L,l,n) (assert(n==0), luaL_register(L,NULL,l))
 # define luaL_setmetatable(L, name) \
     (luaL_getmetatable((L), (name)), lua_setmetatable(L, -2))
 
-	static int relindex(int idx, int offset)
+
+static int relindex(int idx, int offset)
 {
 	return idx < 0 && idx > LUA_REGISTRYINDEX ? idx - offset : idx;
 }
@@ -55,22 +55,21 @@ static void lua_rawsetp(lua_State *L, int idx, const void *p) {
 	lua_rawset(L, relindex(idx, 1));
 }
 
-#ifndef luaL_newlib /* not LuaJIT 2.1 */
-#define luaL_newlib(L,l) (lua_newtable(L), luaL_register(L,NULL,l))
-
-static lua_Integer lua_tointegerx(lua_State *L, int idx, int *isint) {
+//#ifndef luaL_newlib /* not LuaJIT 2.1 */
+//#define luaL_newlib(L,l) (lua_newtable(L), luaL_register(L,NULL,l))
+static lua_Integer lua_tointegerxFix(lua_State *L, int idx, int *isint) {
 	lua_Integer i = lua_tointeger(L, idx);
 	if (isint) *isint = (i != 0 || lua_type(L, idx) == LUA_TNUMBER);
 	return i;
 }
 
-static lua_Number lua_tonumberx(lua_State *L, int idx, int *isnum) {
+static lua_Number lua_tonumberxFix(lua_State *L, int idx, int *isnum) {
 	lua_Number i = lua_tonumber(L, idx);
 	if (isnum) *isnum = (i != 0 || lua_type(L, idx) == LUA_TNUMBER);
 	return i;
 }
 
-static void *luaL_testudata(lua_State *L, int idx, const char *type) {
+static void *luaL_testudataFix(lua_State *L, int idx, const char *type) {
 	void *p = lua_touserdata(L, idx);
 	if (p != NULL && lua_getmetatable(L, idx)) {
 		lua_getfield(L, LUA_REGISTRYINDEX, type);
@@ -82,7 +81,7 @@ static void *luaL_testudata(lua_State *L, int idx, const char *type) {
 	return NULL;
 }
 
-#endif
+//#endif
 
 #ifdef LUAI_BITSINT /* not LuaJIT */
 #include <errno.h>
@@ -165,7 +164,7 @@ static void lpb_pushhooktable(lua_State *L, lpb_State *LS)
 }
 
 static int Lpb_delete(lua_State *L) {
-	lpb_State *LS = (lpb_State*)luaL_testudata(L, 1, PB_STATE);
+	lpb_State *LS = (lpb_State*)luaL_testudataFix(L, 1, PB_STATE);
 	if (LS != NULL) {
 		pb_free(&LS->base);
 		pb_resetbuffer(&LS->buffer);
@@ -318,7 +317,7 @@ static uint64_t lpb_tointegerx(lua_State *L, int idx, int *isint) {
 	if (*isint) return v;
 #else
 	uint64_t v = 0;
-	lua_Number nv = lua_tonumberx(L, idx, isint);
+	lua_Number nv = lua_tonumberxFix(L, idx, isint);
 	if (*isint) {
 		if (nv < (lua_Number)INT64_MIN || nv >(lua_Number)INT64_MAX)
 			luaL_error(L, "number has no integer representation");
@@ -397,12 +396,12 @@ static int lpb_addtype(lua_State *L, pb_Buffer *b, int idx, int type, size_t *pl
 		ret = 1;
 		break;
 	case PB_Tdouble:
-		v.lnum = lua_tonumberx(L, idx, &ret);
+		v.lnum = lua_tonumberxFix(L, idx, &ret);
 		if (ret) len = pb_addfixed64(b, pb_encode_double((double)v.lnum));
 		if (v.lnum != 0.0) len = 0;
 		break;
 	case PB_Tfloat:
-		v.lnum = lua_tonumberx(L, idx, &ret);
+		v.lnum = lua_tonumberxFix(L, idx, &ret);
 		if (ret) len = pb_addfixed32(b, pb_encode_float((float)v.lnum));
 		if (v.lnum != 0.0) len = 0;
 		break;
@@ -1169,7 +1168,7 @@ static pb_Type *lpb_type(pb_State *S, pb_Slice s) {
 }
 
 static pb_Field *lpb_checkfield(lua_State *L, int idx, pb_Type *t) {
-	int isint, number = (int)lua_tointegerx(L, idx, &isint);
+	int isint, number = (int)lua_tointegerxFix(L, idx, &isint);
 	if (isint) return pb_field(t, number);
 	return pb_fname(t, pb_name(default_state(L), lpb_checkslice(L, idx)));
 }
