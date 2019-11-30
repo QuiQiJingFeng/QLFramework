@@ -11,8 +11,9 @@
 static BaiduLocationService * _instance;
 static BMKLocationManager  * _locationManager;
 static CLLocationManager* _cclLocationManager;
+static int _updateCallBack = 0;
 @implementation BaiduLocationService
-+(id)getInstance{
++(BaiduLocationService*)getInstance{
     //线程锁
     @synchronized(self){
         if(_instance == nil){
@@ -29,7 +30,7 @@ static CLLocationManager* _cclLocationManager;
     
     _locationManager.coordinateType = BMKLocationCoordinateTypeBMK09LL;
     _locationManager.distanceFilter = [options[@"distanceFilter"] doubleValue];
-    _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    _locationManager.desiredAccuracy = [options[@"desiredAccuracy"] doubleValue];
     _locationManager.activityType = CLActivityTypeAutomotiveNavigation;
     _locationManager.pausesLocationUpdatesAutomatically = [options[@"pausesLocationUpdatesAutomatically"] boolValue];
     _locationManager.allowsBackgroundLocationUpdates = [options[@"allowsBackgroundLocationUpdates"] boolValue];
@@ -89,28 +90,71 @@ static CLLocationManager* _cclLocationManager;
 +(void)start:(NSDictionary*)options{
     //单次定位
     int callBack = [options[@"callBack"] intValue];
+    cocos2d::LuaObjcBridge::retainLuaFunctionById(callBack);
     [_locationManager requestLocationWithReGeocode:YES withNetworkState:YES completionBlock:^(BMKLocation * _Nullable location, BMKLocationNetworkState state, NSError * _Nullable error) {
         if (error)
         {
             NSLog(@"locError:{%ld - %@};", (long)error.code, error.localizedDescription);
             NSDictionary* dict = [[NSDictionary alloc] initWithDictionary:@{@"errcode":[NSNumber numberWithInteger: error.code],@"descript":error.localizedDescription}];
             [BaiduLocationService callBackWithFuncID:callBack andParams:dict];
+            cocos2d::LuaObjcBridge::releaseLuaFunctionById(callBack);
         }else{
             if (location) {//得到定位信息，添加annotation
                 double longitude = location.location.coordinate.longitude;
                 double latitude = location.location.coordinate.latitude;
                 NSString* addr = [location.rgcData locationDescribe];
                 NSDictionary* dict = [[NSDictionary alloc] initWithDictionary:@{@"latitude":[NSNumber numberWithDouble:latitude],@"longitude":[NSNumber numberWithDouble:longitude],@"addr":addr}];
-                
-                
                 [BaiduLocationService callBackWithFuncID:callBack andParams:dict];
+                cocos2d::LuaObjcBridge::releaseLuaFunctionById(callBack);
             }else{
                 NSLog(@"error not location");
             }
         }
     }];
 }
+/*
+ 由于苹果系统的首次定位结果为粗定位，其可能无法满足需要高精度定位的场景。
+ 百度提供了 kCLLocationAccuracyBest 参数，设置该参数可以获取到精度在10m左右的定位结果，但是相应的需要付出比较长的时间（10s左右），越高的精度需要持续定位时间越长。
+ 
+ 推荐使用kCLLocationAccuracyHundredMeters，一次还不错的定位，偏差在百米左右，超时时间设置在2s-3s左右即可。
+ */
++(void)startUpdate:(NSDictionary*)options{
+    if(_updateCallBack != 0){
+        [self stopUpdate];
+    }
+    _updateCallBack = [options[@"callBack"] intValue];
+    cocos2d::LuaObjcBridge::retainLuaFunctionById(_updateCallBack);
+    //如果需要持续定位返回地址信息（需要联网），请设置如下：
+    [_locationManager setLocatingWithReGeocode:YES];
+    [_locationManager startUpdatingLocation];
+}
 
+- (void)BMKLocationManager:(BMKLocationManager * _Nonnull)manager didUpdateLocation:(BMKLocation * _Nullable)location orError:(NSError * _Nullable)error
+
+{
+    if (error)
+    {
+        NSLog(@"locError:{%ld - %@};", (long)error.code, error.localizedDescription);
+        NSDictionary* dict = [[NSDictionary alloc] initWithDictionary:@{@"errcode":[NSNumber numberWithInteger: error.code],@"descript":error.localizedDescription}];
+        [BaiduLocationService callBackWithFuncID:_updateCallBack andParams:dict];
+    }else{
+        if (location) {//得到定位信息，添加annotation
+            double longitude = location.location.coordinate.longitude;
+            double latitude = location.location.coordinate.latitude;
+            NSString* addr = [location.rgcData locationDescribe];
+            NSDictionary* dict = [[NSDictionary alloc] initWithDictionary:@{@"latitude":[NSNumber numberWithDouble:latitude],@"longitude":[NSNumber numberWithDouble:longitude],@"addr":addr}];
+            [BaiduLocationService callBackWithFuncID:_updateCallBack andParams:dict];
+        }else{
+            NSLog(@"error not location");
+        }
+    }
+}
+
++(void)stopUpdate{
+    cocos2d::LuaObjcBridge::releaseLuaFunctionById(_updateCallBack);
+    _updateCallBack = 0;
+    [_locationManager stopUpdatingLocation];
+}
 //返回的时候不要返回bool类型,并且返回值是一个table
 +(void) callBackWithFuncID:(int) funcId andParams:(NSDictionary*) dic
 {
@@ -127,7 +171,6 @@ static CLLocationManager* _cclLocationManager;
         
         cocos2d::LuaObjcBridge::getStack()->pushLuaValueDict(item);
         cocos2d::LuaObjcBridge::getStack()->executeFunction(1);
-        cocos2d::LuaObjcBridge::releaseLuaFunctionById(funcId);
         int count = (int)[dic retainCount];
         for (int i = 0; i < count; i++) {
             [dic release];

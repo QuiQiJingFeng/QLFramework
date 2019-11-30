@@ -9,7 +9,7 @@
 #import <CoreLocation/CLLocationManager.h>
 @interface BaiduLocationService : NSObject <BMKLocationManagerDelegate>
 
-+(id)getInstance;
++(BaiduLocationService*)getInstance;
 //初始化百度SDK
 +(void)initOptions:(NSDictionary*)options;
 -(void)initOptions:(NSDictionary*)options;
@@ -19,7 +19,13 @@
 +(void)jumpEnableGps;
 //动态申请GPS权限
 +(void)jumpEnableLimitGps;
-//开始定位
+//开始定位 单次定位
 +(void)start:(NSDictionary*)options;
+//开始定位 连续定位
++(void)startUpdate:(NSDictionary*)options;
+//停止连续定位回调
++(void)stopUpdate;
 +(void) callBackWithFuncID:(int) funcId andParams:(NSDictionary*) dic;
+//连续定位回调
+- (void)BMKLocationManager:(BMKLocationManager * _Nonnull)manager didUpdateLocation:(BMKLocation * _Nullable)location orError:(NSError * _Nullable)error;
 @end
