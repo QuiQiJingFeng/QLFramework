@@ -433,8 +433,8 @@
     </content>
     <orderEntry type="jdk" jdkName="Android API 28 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Gradle: __local_aars__:/Users/jingfeng/Desktop/test/QLClient/client-slgc/frameworks/runtime-src/proj.android/app/libs/BaiduLBS_Android.jar:unspecified@jar" level="project" />
-    <orderEntry type="library" name="Gradle: __local_aars__:/Users/jingfeng/Desktop/test/QLClient/client-slgc/frameworks/runtime-src/proj.android/app/libs/fastjson-1.2.62.jar:unspecified@jar" level="project" />
+    <orderEntry type="library" name="Gradle: __local_aars__:/Users/jingfeng/Desktop/QLClient/client-slgc/frameworks/runtime-src/proj.android/app/libs/fastjson-1.2.62.jar:unspecified@jar" level="project" />
+    <orderEntry type="library" name="Gradle: __local_aars__:/Users/jingfeng/Desktop/QLClient/client-slgc/frameworks/runtime-src/proj.android/app/libs/BaiduLBS_Android.jar:unspecified@jar" level="project" />
     <orderEntry type="module" module-name="libcocos2dx" />
   </component>
 </module>

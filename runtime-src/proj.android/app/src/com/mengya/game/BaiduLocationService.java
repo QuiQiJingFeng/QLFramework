@@ -175,6 +175,8 @@ public class BaiduLocationService {
         synchronized (_objLock) {
             if (_client != null && _client.isStarted()) {
                 _client.stop();
+                Cocos2dxLuaJavaBridge.releaseLuaFunction(_callBack);
+                _callBack = 0;
             }
         }
     }
