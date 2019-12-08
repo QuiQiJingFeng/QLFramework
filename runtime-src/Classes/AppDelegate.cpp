@@ -50,6 +50,11 @@ using namespace std;
 #endif
 
 extern "C" { int luaopen_pblib(lua_State *L); }
+
+#include "JSONManager.h"
+#include "Utils.h"
+#include "FYDC.h"
+#include "LuaCBridge.h"
 //FYD ENDED
 
 AppDelegate::AppDelegate()
@@ -105,12 +110,61 @@ bool AppDelegate::applicationDidFinishLaunching()
     luaopen_pblib(L);
 
     LuaStack* stack = engine->getLuaStack();
-    stack->setXXTEAKeyAndSign("2dxLua", strlen("2dxLua"), "XXTEA", strlen("XXTEA"));
+    stack->setXXTEAKeyAndSign("10cc4fdee2fcd047", strlen("10cc4fdee2fcd047"), "gclR3cu9", strlen("gclR3cu9"));
 
     //register custom function
     //LuaStack* stack = engine->getLuaStack();
     //register_custom_function(stack->getLuaState());
     
+    //如果是IOS/ANDROID 第一次启动 需要解压缩文件
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_IOS
+    string path = FileUtils::getInstance()->getWritablePath();
+    printf("writePath = %s\n",path.c_str());
+    bool exsit = FileUtils::getInstance()->isFileExist(path + "package/project.manifest");
+    bool decompress = false;
+    if(!exsit){
+        decompress = true;
+    }else{
+        //沙盒目录的版本文件
+        string content = FileUtils::getInstance()->getStringFromFile(path + "package/project.manifest");
+        JSONManager json;
+        json.parseValueMapFromJSON(content);
+        auto data = json.getDataMap();
+        
+        string version2 = data["version"].asString();
+        //程序包中的版本文件
+        content = FileUtils::getInstance()->getStringFromFile("package/project.manifest");
+        json.parseValueMapFromJSON(content);
+        data = json.getDataMap();
+        string version1 = data["version"].asString();
+        bool greater = Utils::getInstance()->versionGreater(version1,version2);
+        //(在不删除app的情况下,从商店更新会出现这种情况)
+        if(greater){
+            decompress = true;
+        }
+    }
+
+    if(decompress){
+        FileUtils::getInstance()->removeDirectory(path + "package/");
+        //获取程序包中的版本文件
+        string assets_info = FileUtils::getInstance()->getStringFromFile("package/project.manifest");
+        JSONManager json;
+        json.parseValueMapFromJSON(assets_info);
+        auto data = json.getDataMap();
+        auto assets = data["assets"].asValueMap();
+        //解压ZIP包到沙盒目录
+        for(auto iter = assets.begin();iter != assets.end();++iter){
+            auto fileName = "package/"+ iter->first;
+            printf("unzip=>%s\n",fileName.c_str());
+            Utils::getInstance()->unzipFile(fileName, path);
+        }
+    }
+    FileUtils::getInstance()->addSearchPath(path + "package/src");
+    FileUtils::getInstance()->addSearchPath(path + "package/res");
+#endif
+
+
+
 #if CC_64BITS
     FileUtils::getInstance()->addSearchPath("src/64bit");
 #endif
