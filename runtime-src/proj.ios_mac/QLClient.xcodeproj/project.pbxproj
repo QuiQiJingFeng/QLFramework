@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		141D67F3238A97A400FB1AC4 /* BMKLocationKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 141D67F0238A97A400FB1AC4 /* BMKLocationKit.framework */; };
 		141D67F5238A97D100FB1AC4 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 141D67F4238A97D100FB1AC4 /* CoreLocation.framework */; };
 		141D67F7238A97DA00FB1AC4 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 141D67F6238A97DA00FB1AC4 /* SystemConfiguration.framework */; };
 		141D67F9238A97E300FB1AC4 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 141D67F8238A97E300FB1AC4 /* Security.framework */; };
@@ -19,6 +18,7 @@
 		141D6809238AE08200FB1AC4 /* GameController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 141D6808238AE08100FB1AC4 /* GameController.framework */; };
 		14C6CA0B239219D100D472F1 /* pb.c in Sources */ = {isa = PBXBuildFile; fileRef = 14C6CA09239219D000D472F1 /* pb.c */; };
 		14C6CA0C239219D100D472F1 /* pb.c in Sources */ = {isa = PBXBuildFile; fileRef = 14C6CA09239219D000D472F1 /* pb.c */; };
+		14EA0C8A239CFA1D00DD41F9 /* BMKLocationKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14EA0C89239CFA1D00DD41F9 /* BMKLocationKit.framework */; };
 		15427CD3198F221400DC375D /* libcocos2d iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 15A8A4251834BDA200142BE0 /* libcocos2d iOS.a */; };
 		15427CD5198F222200DC375D /* libluacocos2d iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 15427CD2198F220600DC375D /* libluacocos2d iOS.a */; };
 		15427CEC198F24A600DC375D /* libluacocos2d Mac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 15427CC2198F220600DC375D /* libluacocos2d Mac.a */; };
@@ -189,6 +189,7 @@
 		141D6808238AE08100FB1AC4 /* GameController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameController.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS11.2.sdk/System/Library/Frameworks/GameController.framework; sourceTree = DEVELOPER_DIR; };
 		14C6CA09239219D000D472F1 /* pb.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = pb.c; path = ../Classes/luaprotobuf/pb.c; sourceTree = "<group>"; };
 		14C6CA0A239219D100D472F1 /* pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pb.h; path = ../Classes/luaprotobuf/pb.h; sourceTree = "<group>"; };
+		14EA0C89239CFA1D00DD41F9 /* BMKLocationKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BMKLocationKit.framework; path = ../../BaiduLoc_iOSSDK_All_Bitcode_v1.8/IOS/BMKLocationKit.framework; sourceTree = "<group>"; };
 		15A8A4031834BDA200142BE0 /* cocos2d_libs.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = cocos2d_libs.xcodeproj; path = "../../cocos2d-x/build/cocos2d_libs.xcodeproj"; sourceTree = "<group>"; };
 		15A8A4871834C90E00142BE0 /* libcurl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcurl.dylib; path = usr/lib/libcurl.dylib; sourceTree = SDKROOT; };
 		15C1568D1683131500D239F2 /* libcurl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcurl.a; path = "../../cocos2d-x/cocos2dx/platform/third_party/ios/libraries/libcurl.a"; sourceTree = "<group>"; };
@@ -273,6 +274,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				14EA0C8A239CFA1D00DD41F9 /* BMKLocationKit.framework in Frameworks */,
 				141D6809238AE08200FB1AC4 /* GameController.framework in Frameworks */,
 				141D6801238A99A500FB1AC4 /* AdSupport.framework in Frameworks */,
 				141D67FF238A999600FB1AC4 /* libc++.tbd in Frameworks */,
@@ -281,7 +283,6 @@
 				141D67F9238A97E300FB1AC4 /* Security.framework in Frameworks */,
 				141D67F7238A97DA00FB1AC4 /* SystemConfiguration.framework in Frameworks */,
 				141D67F5238A97D100FB1AC4 /* CoreLocation.framework in Frameworks */,
-				141D67F3238A97A400FB1AC4 /* BMKLocationKit.framework in Frameworks */,
 				294D0D721D0D572600F7F5D4 /* CoreText.framework in Frameworks */,
 				9FA3AE4E1BE9BCC900FC9645 /* CFNetwork.framework in Frameworks */,
 				ED545A891B68A23E00C3958E /* libiconv.dylib in Frameworks */,
@@ -425,6 +426,7 @@
 		F293B3CB15EB7BE500256477 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				14EA0C89239CFA1D00DD41F9 /* BMKLocationKit.framework */,
 				141D6808238AE08100FB1AC4 /* GameController.framework */,
 				141D6800238A99A500FB1AC4 /* AdSupport.framework */,
 				141D67FE238A999500FB1AC4 /* libc++.tbd */,
@@ -882,7 +884,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COMPRESS_PNG_FILES = NO;
 				ENABLE_BITCODE = NO;
-				FRAMEWORK_SEARCH_PATHS = "/Users/jingfeng/Desktop/QLClient/client-slgc/frameworks/BaiduLoc_iOSSDK_All_Bitcode_v1.8";
+				FRAMEWORK_SEARCH_PATHS = "/Users/jingfeng/Desktop/QLClient/client-slgc/frameworks/BaiduLoc_iOSSDK_All_Bitcode_v1.8/IOS";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ios/Prefix.pch;
@@ -924,7 +926,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COMPRESS_PNG_FILES = NO;
 				ENABLE_BITCODE = NO;
-				FRAMEWORK_SEARCH_PATHS = "/Users/jingfeng/Desktop/QLClient/client-slgc/frameworks/BaiduLoc_iOSSDK_All_Bitcode_v1.8";
+				FRAMEWORK_SEARCH_PATHS = "/Users/jingfeng/Desktop/QLClient/client-slgc/frameworks/BaiduLoc_iOSSDK_All_Bitcode_v1.8/IOS";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ios/Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
