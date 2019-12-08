@@ -163,10 +163,12 @@ android.applicationVariants.all { variant ->
         }
         //拷贝压缩包到资源目录
         copy {
-           from "${buildDir}/../../../../../pacakge"
-           into "${buildDir}/intermediates/assets/${variant.dirName}/pacakge"
+           from "${buildDir}/../../../../../package"
+           into "${buildDir}/intermediates/assets/${variant.dirName}/package"
         }
     }
+
+
 }
 
 dependencies {
