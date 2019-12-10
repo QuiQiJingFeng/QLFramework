@@ -42,22 +42,22 @@ public class Util {
         return "";
     }
 
-    public static void checkExitGame() {
-        Builder builder = new Builder(instance);
-        builder.setTitle("提示");
-        builder.setMessage("确定退出吗");
-        builder.setIcon(android.R.drawable.ic_dialog_info);
-        builder.setPositiveButton("确定", new OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                System.exit(0);
-            }
-        });
-        builder.setNegativeButton("取消", new OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        }).show();
-    }
+//    public static void checkExitGame() {
+//        AlertDialog.Builder builder = new AlertDialog.Builder(_activity);
+//        builder.setTitle("提示");
+//        builder.setMessage("确定退出吗");
+//        builder.setIcon(android.R.drawable.ic_dialog_info);
+//        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                System.exit(0);
+//            }
+//        });
+//        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                dialog.dismiss();
+//            }
+//        }).show();
+//    }
 }

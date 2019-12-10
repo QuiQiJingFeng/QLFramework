@@ -158,7 +158,7 @@ android.applicationVariants.all { variant ->
 
     variant.mergeAssets.doLast {
         exec {
-            workingDir "${buildDir}/../../../../../tools/utils/"
+            workingDir "${buildDir}/../../../../../utils/"
             commandLine "python","autopackage.py"
         }
         //拷贝压缩包到资源目录
