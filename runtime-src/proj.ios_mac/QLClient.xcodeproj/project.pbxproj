@@ -27,6 +27,18 @@
 		145E5339239D490E00920E1F /* LuaCBridge.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 145E532C239D490E00920E1F /* LuaCBridge.cpp */; };
 		145E533A239D490E00920E1F /* Utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 145E532E239D490E00920E1F /* Utils.cpp */; };
 		145E533B239D490E00920E1F /* Utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 145E532E239D490E00920E1F /* Utils.cpp */; };
+		14C4A0E8239FDEB200D19B91 /* lsha1.c in Sources */ = {isa = PBXBuildFile; fileRef = 14C4A0DE239FDEB100D19B91 /* lsha1.c */; };
+		14C4A0E9239FDEB200D19B91 /* lsha1.c in Sources */ = {isa = PBXBuildFile; fileRef = 14C4A0DE239FDEB100D19B91 /* lsha1.c */; };
+		14C4A0EA239FDEB200D19B91 /* lua-crypt.c in Sources */ = {isa = PBXBuildFile; fileRef = 14C4A0DF239FDEB100D19B91 /* lua-crypt.c */; };
+		14C4A0EB239FDEB200D19B91 /* lua-crypt.c in Sources */ = {isa = PBXBuildFile; fileRef = 14C4A0DF239FDEB100D19B91 /* lua-crypt.c */; };
+		14C4A0EC239FDEB200D19B91 /* bit.c in Sources */ = {isa = PBXBuildFile; fileRef = 14C4A0E3239FDEB100D19B91 /* bit.c */; };
+		14C4A0ED239FDEB200D19B91 /* bit.c in Sources */ = {isa = PBXBuildFile; fileRef = 14C4A0E3239FDEB100D19B91 /* bit.c */; };
+		14C4A0EE239FDEB200D19B91 /* md5.c in Sources */ = {isa = PBXBuildFile; fileRef = 14C4A0E5239FDEB200D19B91 /* md5.c */; };
+		14C4A0EF239FDEB200D19B91 /* md5.c in Sources */ = {isa = PBXBuildFile; fileRef = 14C4A0E5239FDEB200D19B91 /* md5.c */; };
+		14C4A0F0239FDEB200D19B91 /* md5lib.c in Sources */ = {isa = PBXBuildFile; fileRef = 14C4A0E7239FDEB200D19B91 /* md5lib.c */; };
+		14C4A0F1239FDEB200D19B91 /* md5lib.c in Sources */ = {isa = PBXBuildFile; fileRef = 14C4A0E7239FDEB200D19B91 /* md5lib.c */; };
+		14C4A0F4239FE55700D19B91 /* res in Resources */ = {isa = PBXBuildFile; fileRef = 14C4A0F2239FE55700D19B91 /* res */; };
+		14C4A0F5239FE55700D19B91 /* src in Resources */ = {isa = PBXBuildFile; fileRef = 14C4A0F3239FE55700D19B91 /* src */; };
 		14C6CA0B239219D100D472F1 /* pb.c in Sources */ = {isa = PBXBuildFile; fileRef = 14C6CA09239219D000D472F1 /* pb.c */; };
 		14C6CA0C239219D100D472F1 /* pb.c in Sources */ = {isa = PBXBuildFile; fileRef = 14C6CA09239219D000D472F1 /* pb.c */; };
 		14EA0C8A239CFA1D00DD41F9 /* BMKLocationKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14EA0C89239CFA1D00DD41F9 /* BMKLocationKit.framework */; };
@@ -206,6 +218,14 @@
 		145E532D239D490E00920E1F /* LuaCBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaCBridge.h; sourceTree = "<group>"; };
 		145E532E239D490E00920E1F /* Utils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Utils.cpp; sourceTree = "<group>"; };
 		145E532F239D490E00920E1F /* Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utils.h; sourceTree = "<group>"; };
+		14C4A0DE239FDEB100D19B91 /* lsha1.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lsha1.c; sourceTree = "<group>"; };
+		14C4A0DF239FDEB100D19B91 /* lua-crypt.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "lua-crypt.c"; sourceTree = "<group>"; };
+		14C4A0E3239FDEB100D19B91 /* bit.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = bit.c; sourceTree = "<group>"; };
+		14C4A0E5239FDEB200D19B91 /* md5.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = md5.c; sourceTree = "<group>"; };
+		14C4A0E6239FDEB200D19B91 /* md5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = md5.h; sourceTree = "<group>"; };
+		14C4A0E7239FDEB200D19B91 /* md5lib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = md5lib.c; sourceTree = "<group>"; };
+		14C4A0F2239FE55700D19B91 /* res */ = {isa = PBXFileReference; lastKnownFileType = folder; name = res; path = ../../../res; sourceTree = "<group>"; };
+		14C4A0F3239FE55700D19B91 /* src */ = {isa = PBXFileReference; lastKnownFileType = folder; name = src; path = ../../../src; sourceTree = "<group>"; };
 		14C6CA09239219D000D472F1 /* pb.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = pb.c; path = ../Classes/luaprotobuf/pb.c; sourceTree = "<group>"; };
 		14C6CA0A239219D100D472F1 /* pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pb.h; path = ../Classes/luaprotobuf/pb.h; sourceTree = "<group>"; };
 		14EA0C89239CFA1D00DD41F9 /* BMKLocationKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BMKLocationKit.framework; path = ../../BaiduLoc_iOSSDK_All_Bitcode_v1.8/IOS/BMKLocationKit.framework; sourceTree = "<group>"; };
@@ -352,6 +372,35 @@
 			path = ../Classes/common;
 			sourceTree = "<group>";
 		};
+		14C4A0DD239FDEB100D19B91 /* crypt */ = {
+			isa = PBXGroup;
+			children = (
+				14C4A0DE239FDEB100D19B91 /* lsha1.c */,
+				14C4A0DF239FDEB100D19B91 /* lua-crypt.c */,
+			);
+			path = crypt;
+			sourceTree = "<group>";
+		};
+		14C4A0E2239FDEB100D19B91 /* bit */ = {
+			isa = PBXGroup;
+			children = (
+				14C4A0E3239FDEB100D19B91 /* bit.c */,
+			);
+			name = bit;
+			path = ../Classes/bit;
+			sourceTree = "<group>";
+		};
+		14C4A0E4239FDEB200D19B91 /* md5 */ = {
+			isa = PBXGroup;
+			children = (
+				14C4A0E5239FDEB200D19B91 /* md5.c */,
+				14C4A0E6239FDEB200D19B91 /* md5.h */,
+				14C4A0E7239FDEB200D19B91 /* md5lib.c */,
+			);
+			name = md5;
+			path = ../Classes/md5;
+			sourceTree = "<group>";
+		};
 		14C6CA08239219BF00D472F1 /* luaprotobuf */ = {
 			isa = PBXGroup;
 			children = (
@@ -374,6 +423,8 @@
 		1A8A4ED51F6F9AD00044495E /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				14C4A0F2239FE55700D19B91 /* res */,
+				14C4A0F3239FE55700D19B91 /* src */,
 				14174651239D50F400276236 /* package */,
 				1A8A4ED61F6F9AE70044495E /* config.json */,
 			);
@@ -502,6 +553,9 @@
 		F293BB7C15EB830F00256477 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				14C4A0E2239FDEB100D19B91 /* bit */,
+				14C4A0DD239FDEB100D19B91 /* crypt */,
+				14C4A0E4239FDEB200D19B91 /* md5 */,
 				145E5324239D490E00920E1F /* common */,
 				14C6CA08239219BF00D472F1 /* luaprotobuf */,
 				F293BB7E15EB831F00256477 /* AppDelegate.cpp */,
@@ -673,6 +727,8 @@
 				9FF504841A5E87B100AFDA55 /* ConsoleWindow.xib in Resources */,
 				1A8A4EDA1F6F9AEB0044495E /* config.json in Resources */,
 				5023817617EBBE3400990C9B /* Icon.icns in Resources */,
+				14C4A0F5239FE55700D19B91 /* src in Resources */,
+				14C4A0F4239FE55700D19B91 /* res in Resources */,
 				9FFC07361A4A764100AED399 /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -703,7 +759,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "python ${SRCROOT}/../../../tools/utils/autopackage.py;\nfind ${SRCROOT}/../../../package/ -name \"*\" -exec touch -cm {} \\;";
+			shellScript = "python ${SRCROOT}/../../../utils/autopackage.py;\nfind ${SRCROOT}/../../../package/ -name \"*\" -exec touch -cm {} \\;";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -712,15 +768,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				14C4A0EF239FDEB200D19B91 /* md5.c in Sources */,
 				145E5333239D490E00920E1F /* FValue.cpp in Sources */,
+				14C4A0EB239FDEB200D19B91 /* lua-crypt.c in Sources */,
 				C07828FA18B4D72E00BD2287 /* SimulatorApp.mm in Sources */,
 				5023813317EBBCE400990C9B /* AppDelegate.cpp in Sources */,
 				145E533B239D490E00920E1F /* Utils.cpp in Sources */,
+				14C4A0ED239FDEB200D19B91 /* bit.c in Sources */,
 				9FF504851A5E87B100AFDA55 /* ConsoleWindowController.m in Sources */,
 				145E5335239D490E00920E1F /* FYDC.cpp in Sources */,
+				14C4A0F1239FDEB200D19B91 /* md5lib.c in Sources */,
 				145E5339239D490E00920E1F /* LuaCBridge.cpp in Sources */,
 				145E5337239D490E00920E1F /* JSONManager.cpp in Sources */,
 				14C6CA0C239219D100D472F1 /* pb.c in Sources */,
+				14C4A0E9239FDEB200D19B91 /* lsha1.c in Sources */,
 				C07828F818B4D72E00BD2287 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -734,10 +795,15 @@
 				5023812417EBBCAC00990C9B /* main.m in Sources */,
 				14C6CA0B239219D100D472F1 /* pb.c in Sources */,
 				145E5332239D490E00920E1F /* FValue.cpp in Sources */,
+				14C4A0EC239FDEB200D19B91 /* bit.c in Sources */,
+				14C4A0F0239FDEB200D19B91 /* md5lib.c in Sources */,
+				14C4A0EE239FDEB200D19B91 /* md5.c in Sources */,
 				145E5336239D490E00920E1F /* JSONManager.cpp in Sources */,
 				5023811817EBBCAC00990C9B /* AppController.mm in Sources */,
 				145E5338239D490E00920E1F /* LuaCBridge.cpp in Sources */,
 				145E533A239D490E00920E1F /* Utils.cpp in Sources */,
+				14C4A0EA239FDEB200D19B91 /* lua-crypt.c in Sources */,
+				14C4A0E8239FDEB200D19B91 /* lsha1.c in Sources */,
 				141D6807238A9D2100FB1AC4 /* BaiduLocationService.mm in Sources */,
 				145E5334239D490E00920E1F /* FYDC.cpp in Sources */,
 			);

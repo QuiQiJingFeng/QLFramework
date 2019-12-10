@@ -49,7 +49,12 @@ using namespace std;
 #include "runtime/Runtime.h"
 #endif
 
-extern "C" { int luaopen_pblib(lua_State *L); }
+extern "C" {
+    int luaopen_pblib(lua_State *L);
+    int luaopen_crypt(lua_State *L);
+    int luaopen_md5_core(lua_State *L);
+    int luaopen_protobuf_c(lua_State *L);
+}
 
 #include "JSONManager.h"
 #include "Utils.h"
@@ -108,6 +113,9 @@ bool AppDelegate::applicationDidFinishLaunching()
 
 	//FYD
     luaopen_pblib(L);
+    luaopen_bit(L);
+    luaopen_crypt(L);
+    luaopen_md5_core(L);
 
     LuaStack* stack = engine->getLuaStack();
     stack->setXXTEAKeyAndSign("10cc4fdee2fcd047", strlen("10cc4fdee2fcd047"), "gclR3cu9", strlen("gclR3cu9"));
