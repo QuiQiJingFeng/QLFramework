@@ -42,7 +42,7 @@ public class Util {
         return "";
     }
 
-    public static void isExitGame() {
+    public static void checkExitGame() {
         Builder builder = new Builder(instance);
         builder.setTitle("提示");
         builder.setMessage("确定退出吗");
