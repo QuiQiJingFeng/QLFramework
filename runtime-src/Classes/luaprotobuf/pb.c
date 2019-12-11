@@ -55,8 +55,9 @@ static void lua_rawsetp(lua_State *L, int idx, const void *p) {
 	lua_rawset(L, relindex(idx, 1));
 }
 
-//#ifndef luaL_newlib /* not LuaJIT 2.1 */
-//#define luaL_newlib(L,l) (lua_newtable(L), luaL_register(L,NULL,l))
+#ifndef luaL_newlib /* not LuaJIT 2.1 */
+#define luaL_newlib(L,l) (lua_newtable(L), luaL_register(L,NULL,l))
+#endif
 static lua_Integer lua_tointegerxFix(lua_State *L, int idx, int *isint) {
 	lua_Integer i = lua_tointeger(L, idx);
 	if (isint) *isint = (i != 0 || lua_type(L, idx) == LUA_TNUMBER);
@@ -80,8 +81,6 @@ static void *luaL_testudataFix(lua_State *L, int idx, const char *type) {
 	}
 	return NULL;
 }
-
-//#endif
 
 #ifdef LUAI_BITSINT /* not LuaJIT */
 #include <errno.h>

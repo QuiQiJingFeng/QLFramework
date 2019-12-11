@@ -22,7 +22,9 @@
 #define _ZLIBIOAPI64_H
 
 // #include "platform/CCPlatformConfig.h"
-#define CC_DLL 
+#ifndef CC_DLL
+#define CC_DLL
+#endif // !CC_DLL
 
 #if (!defined(_WIN32)) && (!defined(WIN32))
 
