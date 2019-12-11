@@ -10,8 +10,6 @@
 #include "cocos2d.h"
 #include "unzip/unzip.h"
 #include "xxtea/xxtea.h"
-#if (CC_TARGET_PLATFORM != CC_PLATFORM_WIN32)
-#endif
 USING_NS_CC;
 
 Utils* Utils::__instance = nullptr;
