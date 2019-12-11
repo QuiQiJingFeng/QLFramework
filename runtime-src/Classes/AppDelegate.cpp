@@ -53,13 +53,11 @@ extern "C" {
     int luaopen_pblib(lua_State *L);
     int luaopen_crypt(lua_State *L);
     int luaopen_md5_core(lua_State *L);
-    int luaopen_protobuf_c(lua_State *L);
+	int luaopen_bit(lua_State *L);
 }
 
 #include "JSONManager.h"
 #include "Utils.h"
-#include "FYDC.h"
-#include "LuaCBridge.h"
 //FYD ENDED
 
 AppDelegate::AppDelegate()
