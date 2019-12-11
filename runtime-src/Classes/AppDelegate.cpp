@@ -164,6 +164,9 @@ bool AppDelegate::applicationDidFinishLaunching()
             printf("unzip=>%s\n",fileName.c_str());
             Utils::getInstance()->unzipFile(fileName, path);
         }
+        FILE * p_fd = fopen((path + "project.manifest").c_str(), "wb");
+        fwrite(assets_info.c_str(), assets_info.size(), 1, p_fd);
+        fclose(p_fd);
     }
     FileUtils::getInstance()->addSearchPath(path + "package/src");
     FileUtils::getInstance()->addSearchPath(path + "package/res");
