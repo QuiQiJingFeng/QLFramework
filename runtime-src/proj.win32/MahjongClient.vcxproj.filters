@@ -13,6 +13,18 @@
     <Filter Include="Classes\luaprotobuf">
       <UniqueIdentifier>{79a92370-1818-4fcc-aff7-68d933ed0092}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Classes\crypt">
+      <UniqueIdentifier>{c9641974-bac1-491f-8673-54c3c193fb0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\bit">
+      <UniqueIdentifier>{64194ac6-b328-4672-b0e4-de20d6639485}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\md5">
+      <UniqueIdentifier>{66e4966f-0a3d-4f17-a922-5e27c70e70bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\common">
+      <UniqueIdentifier>{b201c7bd-181e-4617-9b67-683a6cf8e31e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\AppDelegate.h">
@@ -32,6 +44,27 @@
     <ClInclude Include="..\Classes\luaprotobuf\pb.h">
       <Filter>Classes\luaprotobuf</Filter>
     </ClInclude>
+    <ClInclude Include="..\Classes\md5\md5.h">
+      <Filter>Classes\md5</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\common\FValue.h">
+      <Filter>Classes\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\common\FYDC.h">
+      <Filter>Classes\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\common\FYDHeaders.h">
+      <Filter>Classes\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\common\JSONManager.h">
+      <Filter>Classes\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\common\LuaCBridge.h">
+      <Filter>Classes\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\common\Utils.h">
+      <Filter>Classes\common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Classes\AppDelegate.cpp">
@@ -46,6 +79,36 @@
     </ClCompile>
     <ClCompile Include="..\Classes\luaprotobuf\pb.c">
       <Filter>Classes\luaprotobuf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\bit\bit.c">
+      <Filter>Classes\bit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\crypt\lsha1.c">
+      <Filter>Classes\crypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\crypt\lua-crypt.c">
+      <Filter>Classes\crypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\md5\md5.c">
+      <Filter>Classes\md5</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\md5\md5lib.c">
+      <Filter>Classes\md5</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\common\FValue.cpp">
+      <Filter>Classes\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\common\FYDC.cpp">
+      <Filter>Classes\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\common\JSONManager.cpp">
+      <Filter>Classes\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\common\LuaCBridge.cpp">
+      <Filter>Classes\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\common\Utils.cpp">
+      <Filter>Classes\common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
