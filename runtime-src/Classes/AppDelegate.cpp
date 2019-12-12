@@ -126,13 +126,13 @@ bool AppDelegate::applicationDidFinishLaunching()
 #if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_IOS
     string path = FileUtils::getInstance()->getWritablePath();
     printf("writePath = %s\n",path.c_str());
-    bool exsit = FileUtils::getInstance()->isFileExist(path + "package/project.manifest");
+    bool exsit = FileUtils::getInstance()->isFileExist(path + "project.manifest");
     bool decompress = false;
     if(!exsit){
         decompress = true;
     }else{
         //沙盒目录的版本文件
-        string content = FileUtils::getInstance()->getStringFromFile(path + "package/project.manifest");
+        string content = FileUtils::getInstance()->getStringFromFile(path + "project.manifest");
         JSONManager json;
         json.parseValueMapFromJSON(content);
         auto data = json.getDataMap();
@@ -144,7 +144,7 @@ bool AppDelegate::applicationDidFinishLaunching()
         data = json.getDataMap();
         string version1 = data["version"].asString();
         bool greater = Utils::getInstance()->versionGreater(version1,version2);
-        //(在不删除app的情况下,从商店更新会出现这种情况)
+        //覆盖安装会出现这种情况,程序包中的版本号比可写目录中的版本号大
         if(greater){
             decompress = true;
         }
