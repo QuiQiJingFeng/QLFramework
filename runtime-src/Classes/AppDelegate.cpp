@@ -159,11 +159,16 @@ bool AppDelegate::applicationDidFinishLaunching()
         auto data = json.getDataMap();
         auto assets = data["assets"].asValueMap();
         //解压ZIP包到沙盒目录
-        for(auto iter = assets.begin();iter != assets.end();++iter){
-            auto fileName = "package/"+ iter->first;
-            printf("unzip=>%s\n",fileName.c_str());
-            Utils::getInstance()->unzipFile(fileName, path);
-        }
+        // for(auto iter = assets.begin();iter != assets.end();++iter){
+        //     auto fileName = "package/"+ iter->first;
+        //     printf("unzip=>%s\n",fileName.c_str());
+        //     Utils::getInstance()->unzipFile(fileName, path);
+        // }
+        //解压一部分资源
+        Utils::getInstance()->unzipFile("package/package_src.zip", path);
+        Utils::getInstance()->unzipFile("package/package_res_ui_uncompress.zip", path);
+
+
         FILE * p_fd = fopen((path + "project.manifest").c_str(), "wb");
         fwrite(assets_info.c_str(), assets_info.size(), 1, p_fd);
         fclose(p_fd);
