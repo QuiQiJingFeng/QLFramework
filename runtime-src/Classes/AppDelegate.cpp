@@ -176,6 +176,7 @@ bool AppDelegate::applicationDidFinishLaunching()
     }
     FileUtils::getInstance()->addSearchPath(path + "package/src");
     FileUtils::getInstance()->addSearchPath(path + "package/res");
+    FileUtils::getInstance()->addSearchPath(path + "package/res/ui");
 #endif
 
 
