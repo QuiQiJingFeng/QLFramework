@@ -225,7 +225,14 @@ long Utils::xxteaDecrypt(unsigned char* bytes,long size,char* xxteaSigin,char* x
     return len;
 }
 
-
+FValue Utils::unzipFile(FValueVector vector)
+{
+    string path = vector[0].asString();
+    string outPath = vector[1].asString();
+    bool success = unzipFile(path,outPath);
+    
+    return FValue(success);
+}
 
 
 

@@ -18,9 +18,10 @@ public:
     bool unzipFile(std::string path,std::string outpath);
     bool versionGreater(const std::string& version1, const std::string& version2);
     long xxteaDecrypt(unsigned char* bytes,long size,char* xxteaSigin,char* xxteaKey);
-    
+    FValue Utils::unzipFile(FValueVector vector);
     static Utils* getInstance();
     void registerFunc(){
+        REG_OBJ_FUNC(Utils::unzipFile,Utils::getInstance(),Utils::,"Utils:unzipFile")
     }
 
 private:

@@ -75,7 +75,7 @@ int luaopen_FYDC(lua_State* L)
         { "excute", excuteFYDC},
         { NULL, NULL },
     };
-    luaL_register(L, "__FYDC__", reg);
+    luaL_register(L, "FYDC", reg);
     
     return 1;
 }

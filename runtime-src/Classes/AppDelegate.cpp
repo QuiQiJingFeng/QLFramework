@@ -58,6 +58,7 @@ extern "C" {
 
 #include "JSONManager.h"
 #include "Utils.h"
+#include "FYDC.h"
 //FYD ENDED
 
 AppDelegate::AppDelegate()
@@ -114,6 +115,7 @@ bool AppDelegate::applicationDidFinishLaunching()
     luaopen_bit(L);
     luaopen_crypt(L);
     luaopen_md5_core(L);
+    luaopen_FYDC(L);
 
     LuaStack* stack = engine->getLuaStack();
     stack->setXXTEAKeyAndSign("10cc4fdee2fcd047", strlen("10cc4fdee2fcd047"), "gclR3cu9", strlen("gclR3cu9"));
@@ -166,9 +168,8 @@ bool AppDelegate::applicationDidFinishLaunching()
         // }
         //解压一部分资源
         Utils::getInstance()->unzipFile("package/package_src.zip", path);
+        Utils::getInstance()->unzipFile("package/package_src_uncompress.zip", path);
         Utils::getInstance()->unzipFile("package/package_res_ui_uncompress.zip", path);
-
-
         FILE * p_fd = fopen((path + "project.manifest").c_str(), "wb");
         fwrite(assets_info.c_str(), assets_info.size(), 1, p_fd);
         fclose(p_fd);
