@@ -168,6 +168,7 @@ bool AppDelegate::applicationDidFinishLaunching()
         // }
         //解压一部分资源
         Utils::getInstance()->unzipFile("package/package_src.zip", path);
+        Utils::getInstance()->unzipFile("package/package_src_common.zip", path);
         Utils::getInstance()->unzipFile("package/package_src_uncompress.zip", path);
         Utils::getInstance()->unzipFile("package/package_res_ui_uncompress.zip", path);
         FILE * p_fd = fopen((path + "project.manifest").c_str(), "wb");
