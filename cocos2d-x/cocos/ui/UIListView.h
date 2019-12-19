@@ -461,6 +461,8 @@ public:
      */
     CC_DEPRECATED_ATTRIBUTE void refreshView();
 
+    void enableOrderByTag(bool enable);
+
 CC_CONSTRUCTOR_ACCESS:
     virtual bool init() override;
     
@@ -525,6 +527,7 @@ protected:
 #pragma warning (pop)
 #endif
     ccListViewCallback _eventCallback;
+    bool _isOrderByTag;
 };
 
 }

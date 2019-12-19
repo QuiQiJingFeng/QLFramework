@@ -49,7 +49,8 @@ _curSelectedIndex(-1),
 _innerContainerDoLayoutDirty(true),
 _listViewEventListener(nullptr),
 _listViewEventSelector(nullptr),
-_eventCallback(nullptr)
+_eventCallback(nullptr),
+_isOrderByTag(false)
 {
     this->setTouchEnabled(true);
 }
@@ -585,6 +586,15 @@ void ListView::doLayout()
     updateInnerContainerSize();
     _innerContainer->forceDoLayout();
     _innerContainerDoLayoutDirty = false;
+
+    //FYD Layout使用的是ZOrder值进行排序,所以就导致ListView的item无法使用ZOrder值,为了使item可以使用ZOrder值,这里加个开关
+    if(_isOrderByTag){
+        for (int i = 0; i < length; ++i)
+        {
+            Widget* item = _items.at(i);
+            item->setLocalZOrder(item->getTag());
+        }
+    }
 }
     
 void ListView::addEventListenerListView(Ref *target, SEL_ListViewEvent selector)
@@ -1092,5 +1102,9 @@ void ListView::startMagneticScroll()
     scrollToItem(getIndex(pTargetItem), magneticAnchorPoint, magneticAnchorPoint);
 }
 
+void ListView::enableOrderByTag(bool enable)
+{
+    _isOrderByTag = enable;
+}
 }
 NS_CC_END
