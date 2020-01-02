@@ -72,7 +72,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\Classes;$(ProjectDir)..\Classes\runtime;$(ProjectDir)..\Classes\protobuf-lite;$(EngineRoot)external\win32-specific\zlib\include;$(EngineRoot)external;$(ProjectDir)..\Classes\common;$(EngineRoot)external\lua\lua;$(EngineRoot)external\lua\tolua;$(EngineRoot)external\chipmunk\include\chipmunk;$(EngineRoot)external\curl\include\win32;$(EngineRoot)extensions;$(EngineRoot)tools\simulator\libsimulator\lib;$(EngineRoot)tools\simulator\libsimulator\lib\protobuf-lite;$(ProjectDir)..\Classes\md5;$(ProjectDir)..\Classes\luaprotobuf;$(ProjectDir)..\Classes\bit;$(ProjectDir)..\Classes\crypt;$(EngineRoot);%(AdditionalIncludeDirectories);$(_COCOS_HEADER_WIN32_BEGIN);$(_COCOS_HEADER_WIN32_END)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\Classes;$(ProjectDir)..\Classes\runtime;$(ProjectDir)..\Classes\protobuf-lite;$(EngineRoot)external\win32-specific\zlib\include;$(EngineRoot)external;$(ProjectDir)..\Classes\downloader;$(ProjectDir)..\Classes\common;$(EngineRoot)external\lua\lua;$(EngineRoot)external\lua\tolua;$(EngineRoot)external\chipmunk\include\chipmunk;$(EngineRoot)external\curl\include\win32;$(EngineRoot)extensions;$(EngineRoot)tools\simulator\libsimulator\lib;$(EngineRoot)tools\simulator\libsimulator\lib\protobuf-lite;$(ProjectDir)..\Classes\md5;$(ProjectDir)..\Classes\luaprotobuf;$(ProjectDir)..\Classes\bit;$(ProjectDir)..\Classes\crypt;$(EngineRoot);%(AdditionalIncludeDirectories);$(_COCOS_HEADER_WIN32_BEGIN);$(_COCOS_HEADER_WIN32_END)</AdditionalIncludeDirectories>
       <PrecompiledHeader>
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
@@ -135,6 +135,9 @@ xcopy "$(ProjectDir)..\..\..\src" "$(LocalDebuggerWorkingDirectory)\Resources\sr
       <Outputs>$(TargetName).cab</Outputs>
       <Inputs>$(TargetFileName)</Inputs>
     </CustomBuildStep>
+    <ClCompile>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">/utf-8</AdditionalOptions>
+    </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -200,6 +203,7 @@ xcopy "$(ProjectDir)..\..\..\src" "$(LocalDebuggerWorkingDirectory)\Resources\sr
     <ClInclude Include="..\Classes\common\JSONManager.h" />
     <ClInclude Include="..\Classes\common\LuaCBridge.h" />
     <ClInclude Include="..\Classes\common\Utils.h" />
+    <ClInclude Include="..\Classes\downloader\Downloader.h" />
     <ClInclude Include="..\Classes\luaprotobuf\pb.h" />
     <ClInclude Include="..\Classes\md5\md5.h" />
     <ClInclude Include="main.h" />
@@ -218,6 +222,7 @@ xcopy "$(ProjectDir)..\..\..\src" "$(LocalDebuggerWorkingDirectory)\Resources\sr
     <ClCompile Include="..\Classes\common\Utils.cpp" />
     <ClCompile Include="..\Classes\crypt\lsha1.c" />
     <ClCompile Include="..\Classes\crypt\lua-crypt.c" />
+    <ClCompile Include="..\Classes\downloader\Downloader.cpp" />
     <ClCompile Include="..\Classes\luaprotobuf\pb.c" />
     <ClCompile Include="..\Classes\md5\md5.c" />
     <ClCompile Include="..\Classes\md5\md5lib.c" />

@@ -25,6 +25,9 @@
     <Filter Include="Classes\common">
       <UniqueIdentifier>{b201c7bd-181e-4617-9b67-683a6cf8e31e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Classes\downloader">
+      <UniqueIdentifier>{a75ab265-7852-420c-96e9-3f51759d21bd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\AppDelegate.h">
@@ -64,6 +67,9 @@
     </ClInclude>
     <ClInclude Include="..\Classes\common\Utils.h">
       <Filter>Classes\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\downloader\Downloader.h">
+      <Filter>Classes\downloader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -109,6 +115,9 @@
     </ClCompile>
     <ClCompile Include="..\Classes\common\Utils.cpp">
       <Filter>Classes\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\downloader\Downloader.cpp">
+      <Filter>Classes\downloader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

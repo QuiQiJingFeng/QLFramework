@@ -59,6 +59,7 @@ extern "C" {
 #include "JSONManager.h"
 #include "Utils.h"
 #include "FYDC.h"
+#include "Downloader.h"
 //FYD ENDED
 
 AppDelegate::AppDelegate()
@@ -99,6 +100,26 @@ static int register_all_packages()
 
 bool AppDelegate::applicationDidFinishLaunching()
 {
+
+	/*---------TEST----------*/
+	Downloader::init();
+    
+    char* url = "https://lsjgame.oss-cn-hongkong.aliyuncs.com/%E5%B7%A5%E5%85%B7/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98%E9%AB%98%E9%80%9F%E4%B8%8B%E8%BD%BD%E5%B7%A5%E5%85%B7_v2.0.5%281%29.zip";
+    double length = 4547471;
+    if(Downloader::checkFileExist(url)){
+        Downloader::curlTest(url,"./package/tool.zip",&length);
+    }else{
+        printf("file not found\n");
+    }
+
+ 
+
+
+
+	if (true) {
+		return true;
+	}
+	/*-----------TEST---------*/
     // set default FPS
     Director::getInstance()->setAnimationInterval(1.0 / 60.0f);
 
