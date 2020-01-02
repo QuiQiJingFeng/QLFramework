@@ -68,6 +68,7 @@ static int progressCURL(void* userdata, curl_off_t TotalToDownload, curl_off_t N
           "\r\n",
 	  NowUploaded, TotalToUpload, NowDownloaded, TotalToDownload);
  
+  //如果想要取消,返回�?值即�?
 
   return 0;
 }
