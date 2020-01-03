@@ -18,6 +18,7 @@ struct HeaderInfo{
 };
 enum LUA_CALLBACK_TYPE{
     PROCESS,
+    DOWNLOAD_FAILED,
 };
 Downloader* Downloader::__instance = nullptr;
 long global_already_down = 0;
@@ -194,7 +195,12 @@ bool Downloader::createSimgleTaskInterNal(string param1,string param2,long luaCa
     FValueMap info = Downloader::getHttpInfo(url);
     
     if(info.find("errormessage") != info.end()){
-        printf("error:%s\n",info["errormessage"].asString().c_str());
+        FValueVector vector;
+        vector.push_back(FValue((int)LUA_CALLBACK_TYPE::DOWNLOAD_FAILED));
+        FValueMap map;
+        map["errormessage"] = FValue(info["errormessage"].asString().c_str());
+        vector.push_back(FValue(map));
+        LuaCBridge::getInstance()->executeFunctionByRetainId(luaCallBack, vector);
         return false;
     }
     
@@ -280,13 +286,15 @@ bool Downloader::createSimgleTaskInterNal(string param1,string param2,long luaCa
     curl_easy_setopt(curlHandle,CURLOPT_WRITEDATA,write_data);
 #endif
     bool result = true;
+    string erromessage;
     //设置write_data方法第四个参数获取的指针
     //使用这个属性可以在应用程序和libcurl调用的函数之间传递自定义数据
     curl_easy_setopt(curlHandle, CURLOPT_WRITEDATA, file);
 	int code = curl_easy_perform(curlHandle);
     if(CURLE_OK != code){
-        printf("curl easy perform faild code = %d\n",code);
         result = false;
+        char temp[50];
+        erromessage = sprintf(temp,"curl easy perform faild code = %d\n",code);
     }
     if(result){
         long retcode = 0;
@@ -294,6 +302,7 @@ bool Downloader::createSimgleTaskInterNal(string param1,string param2,long luaCa
         if ( (code == CURLE_OK) && retcode != 200 )
         {
             result = false;
+            erromessage = "response status not 200";
         }
     }
     
@@ -303,7 +312,16 @@ bool Downloader::createSimgleTaskInterNal(string param1,string param2,long luaCa
     sched->performFunctionInCocosThread( [userdata](){
         delete userdata;
     });
+    if(!result){
+        FValueVector vector;
+        vector.push_back(FValue((int)LUA_CALLBACK_TYPE::DOWNLOAD_FAILED));
+        FValueMap map;
+        map["errormessage"] = FValue(info["errormessage"].asString().c_str());
+        vector.push_back(FValue(map));
+        LuaCBridge::getInstance()->executeFunctionByRetainId(luaCallBack, vector);
+    }
     
+        
     return result;
 }
 
