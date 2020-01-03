@@ -17,6 +17,8 @@
 		141D6801238A99A500FB1AC4 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 141D6800238A99A500FB1AC4 /* AdSupport.framework */; };
 		141D6807238A9D2100FB1AC4 /* BaiduLocationService.mm in Sources */ = {isa = PBXBuildFile; fileRef = 141D6806238A9D2100FB1AC4 /* BaiduLocationService.mm */; };
 		141D6809238AE08200FB1AC4 /* GameController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 141D6808238AE08100FB1AC4 /* GameController.framework */; };
+		1443786523BFCC0000C0A2B1 /* Downloader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1443786323BFCBFF00C0A2B1 /* Downloader.cpp */; };
+		1443786623BFCC0000C0A2B1 /* Downloader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1443786323BFCBFF00C0A2B1 /* Downloader.cpp */; };
 		145E5332239D490E00920E1F /* FValue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 145E5325239D490E00920E1F /* FValue.cpp */; };
 		145E5333239D490E00920E1F /* FValue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 145E5325239D490E00920E1F /* FValue.cpp */; };
 		145E5334239D490E00920E1F /* FYDC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 145E5327239D490E00920E1F /* FYDC.cpp */; };
@@ -27,8 +29,6 @@
 		145E5339239D490E00920E1F /* LuaCBridge.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 145E532C239D490E00920E1F /* LuaCBridge.cpp */; };
 		145E533A239D490E00920E1F /* Utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 145E532E239D490E00920E1F /* Utils.cpp */; };
 		145E533B239D490E00920E1F /* Utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 145E532E239D490E00920E1F /* Utils.cpp */; };
-		146496B323BE1E5A004F7C7E /* Downloader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 146496AF23BE1E5A004F7C7E /* Downloader.cpp */; };
-		146496B423BE1E5A004F7C7E /* Downloader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 146496AF23BE1E5A004F7C7E /* Downloader.cpp */; };
 		14C4A0F4239FE55700D19B91 /* res in Resources */ = {isa = PBXBuildFile; fileRef = 14C4A0F2239FE55700D19B91 /* res */; };
 		14C4A0F5239FE55700D19B91 /* src in Resources */ = {isa = PBXBuildFile; fileRef = 14C4A0F3239FE55700D19B91 /* src */; };
 		14C4A107239FF50F00D19B91 /* lsha1.c in Sources */ = {isa = PBXBuildFile; fileRef = 14C4A0FF239FF50F00D19B91 /* lsha1.c */; };
@@ -209,6 +209,8 @@
 		141D6805238A9D2100FB1AC4 /* BaiduLocationService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaiduLocationService.h; sourceTree = "<group>"; };
 		141D6806238A9D2100FB1AC4 /* BaiduLocationService.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = BaiduLocationService.mm; sourceTree = "<group>"; };
 		141D6808238AE08100FB1AC4 /* GameController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameController.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS11.2.sdk/System/Library/Frameworks/GameController.framework; sourceTree = DEVELOPER_DIR; };
+		1443786323BFCBFF00C0A2B1 /* Downloader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Downloader.cpp; path = ../../Classes/downloader/Downloader.cpp; sourceTree = "<group>"; };
+		1443786423BFCC0000C0A2B1 /* Downloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Downloader.h; path = ../../Classes/downloader/Downloader.h; sourceTree = "<group>"; };
 		145E5325239D490E00920E1F /* FValue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FValue.cpp; sourceTree = "<group>"; };
 		145E5326239D490E00920E1F /* FValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FValue.h; sourceTree = "<group>"; };
 		145E5327239D490E00920E1F /* FYDC.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FYDC.cpp; sourceTree = "<group>"; };
@@ -220,8 +222,6 @@
 		145E532D239D490E00920E1F /* LuaCBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaCBridge.h; sourceTree = "<group>"; };
 		145E532E239D490E00920E1F /* Utils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Utils.cpp; sourceTree = "<group>"; };
 		145E532F239D490E00920E1F /* Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utils.h; sourceTree = "<group>"; };
-		146496AF23BE1E5A004F7C7E /* Downloader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Downloader.cpp; sourceTree = "<group>"; };
-		146496B023BE1E5A004F7C7E /* Downloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Downloader.h; sourceTree = "<group>"; };
 		14C4A0F2239FE55700D19B91 /* res */ = {isa = PBXFileReference; lastKnownFileType = folder; name = res; path = ../../../res; sourceTree = "<group>"; };
 		14C4A0F3239FE55700D19B91 /* src */ = {isa = PBXFileReference; lastKnownFileType = folder; name = src; path = ../../../src; sourceTree = "<group>"; };
 		14C4A0FF239FF50F00D19B91 /* lsha1.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lsha1.c; sourceTree = "<group>"; };
@@ -379,8 +379,8 @@
 		146496AE23BE1E5A004F7C7E /* downloader */ = {
 			isa = PBXGroup;
 			children = (
-				146496AF23BE1E5A004F7C7E /* Downloader.cpp */,
-				146496B023BE1E5A004F7C7E /* Downloader.h */,
+				1443786323BFCBFF00C0A2B1 /* Downloader.cpp */,
+				1443786423BFCC0000C0A2B1 /* Downloader.h */,
 			);
 			path = downloader;
 			sourceTree = "<group>";
@@ -797,7 +797,7 @@
 				145E5337239D490E00920E1F /* JSONManager.cpp in Sources */,
 				14C6CA0C239219D100D472F1 /* pb.c in Sources */,
 				14C4A108239FF50F00D19B91 /* lsha1.c in Sources */,
-				146496B423BE1E5A004F7C7E /* Downloader.cpp in Sources */,
+				1443786623BFCC0000C0A2B1 /* Downloader.cpp in Sources */,
 				C07828F818B4D72E00BD2287 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -809,7 +809,7 @@
 				5023812517EBBCAC00990C9B /* RootViewController.mm in Sources */,
 				F293BB9C15EB831F00256477 /* AppDelegate.cpp in Sources */,
 				5023812417EBBCAC00990C9B /* main.m in Sources */,
-				146496B323BE1E5A004F7C7E /* Downloader.cpp in Sources */,
+				1443786523BFCC0000C0A2B1 /* Downloader.cpp in Sources */,
 				14C6CA0B239219D100D472F1 /* pb.c in Sources */,
 				145E5332239D490E00920E1F /* FValue.cpp in Sources */,
 				14C4A10B239FF50F00D19B91 /* bit.c in Sources */,

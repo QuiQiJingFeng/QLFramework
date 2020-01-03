@@ -59,7 +59,6 @@ int excuteFYDC(lua_State* L){
     }
     
     FValue ret = value(values);
-    
     if(!ret.isNull()){
         LuaCBridge::getInstance(L)->pushValueToStack(ret);
         return 1;

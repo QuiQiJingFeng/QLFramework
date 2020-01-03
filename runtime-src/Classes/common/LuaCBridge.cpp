@@ -145,11 +145,16 @@ FValue LuaCBridge::parseStateParamaters(){
 
 FValue LuaCBridge::executeFunctionByRetainId(int retainId, const FValueVector& vectorArgs)
 {
+    FValueMap map;
+    map["errorcode"] = 0;
     getFuncByRetainId(retainId); // -1 func
     if(!lua_isfunction(__state, -1)){
         //LOG retainId 没有绑定的方法
         lua_pop(__state, 1);
-        return FValue("NO_RETAIN_FUNC");
+        map["errorcode"] = FValue(-1);
+        map["errormessage"] = FValue("NO_RETAIN_FUNC");
+        printf("NO_RETAIN_FUNC");
+        return FValue(map);
     }
     
     for(FValue value:vectorArgs){
@@ -167,10 +172,13 @@ FValue LuaCBridge::executeFunctionByRetainId(int retainId, const FValueVector& v
         printf("pcall %s\n%s\n",error,error2);
         //LOG 执行出错  =>  lua_tostring(state, - 1)
         lua_pop(__state, 1);    // 将错误消息弹出栈顶
-        return FValue("excute failed!!!");
+        map["errorcode"] = FValue(-2);
+        map["errormessage"] = FValue("excute failed!!!");
+        printf("excute failed!!!");
+        return FValue(map);
     }
     
-    FValue ret = parseStateParamaters();
+    map["result"] = parseStateParamaters();
     
-    return ret;
+    return FValue(map);
 }
