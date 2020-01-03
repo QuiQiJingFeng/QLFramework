@@ -137,6 +137,7 @@ FValueMap Downloader::getHttpInfo(const char* url){
     {
         map["Accept-Ranges"] = FValue(true);
     }
+    delete headerInfo.ptr;
     return map;
 }
 
@@ -198,7 +199,7 @@ bool Downloader::createSimgleTaskInterNal(string param1,string param2,long luaCa
         FValueVector vector;
         vector.push_back(FValue((int)LUA_CALLBACK_TYPE::DOWNLOAD_FAILED));
         FValueMap map;
-        map["errormessage"] = FValue(info["errormessage"].asString().c_str());
+        map["errormessage"] = info["errormessage"];
         vector.push_back(FValue(map));
         LuaCBridge::getInstance()->executeFunctionByRetainId(luaCallBack, vector);
         return false;
@@ -316,7 +317,7 @@ bool Downloader::createSimgleTaskInterNal(string param1,string param2,long luaCa
         FValueVector vector;
         vector.push_back(FValue((int)LUA_CALLBACK_TYPE::DOWNLOAD_FAILED));
         FValueMap map;
-        map["errormessage"] = FValue(info["errormessage"].asString().c_str());
+        map["errormessage"] = info["errormessage"];
         vector.push_back(FValue(map));
         LuaCBridge::getInstance()->executeFunctionByRetainId(luaCallBack, vector);
     }
