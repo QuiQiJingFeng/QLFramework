@@ -19,6 +19,7 @@ enum LUA_CALLBACK_TYPE{
     PROCESS,
     DOWNLOAD_FAILED,
     DOWNLOAD_SUCCESS,
+    FILE_EXIST,
 };
 Downloader* Downloader::__instance = nullptr;
 long global_already_down = 0;
@@ -181,37 +182,32 @@ FValue Downloader::createSimgleTask(FValueVector vector){
     string url = vector[0].asString();
     string savePath = vector[1].asString();
     long callFunc = vector[2].asFloat();
+    string newPath = cocos2d::FileUtils::getInstance()->fullPathForFilename(savePath);
     
-    std::thread task(&Downloader::createSimgleTaskInterNal,url,savePath,callFunc);
+    int result = access(newPath.c_str(), F_OK);
+    //如果文件已经存在,返回false,提醒用户应该更换名字下载
+    if(result == 0){
+        Downloader::reportDownloadInfoToLua(LUA_CALLBACK_TYPE::FILE_EXIST, "file already exist", callFunc, url, savePath);
+        return FValue(true);
+    }
+    
+    std::thread task(&Downloader::createSimgleTaskInterNal,url,newPath,callFunc);
     task.detach();
     return FValue(true);
 };
 
-void Downloader::reportDownloadErrorToLua(const string errormessage,int handler,string url,string savePath){
+void Downloader::reportDownloadInfoToLua(int type,const string errormessage,int handler,string url,string savePath){
     cocos2d::Scheduler *sched = cocos2d::Director::getInstance()->getScheduler();
     string message = errormessage;
     string urlPath = url;
     string path = savePath;
     sched->performFunctionInCocosThread( [=](){
         FValueVector vector;
-        vector.push_back(FValue((int)LUA_CALLBACK_TYPE::DOWNLOAD_FAILED));
+        vector.push_back(FValue(type));
         FValueMap map;
         map["errormessage"] = FValue(message);
         map["url"] = FValue(urlPath);
         map["savePath"] = FValue(path);
-        vector.push_back(FValue(map));
-        LuaCBridge::getInstance()->executeFunctionByRetainId(handler, vector);
-    });
-}
-
-void Downloader::reportDownloadSuccessToLua(int handler,string url,string savePath){
-    cocos2d::Scheduler *sched = cocos2d::Director::getInstance()->getScheduler();
-    sched->performFunctionInCocosThread( [=](){
-        FValueVector vector;
-        vector.push_back(FValue((int)LUA_CALLBACK_TYPE::DOWNLOAD_SUCCESS));
-        FValueMap map;
-        map["url"] = FValue(url);
-        map["savePath"] = FValue(savePath);
         vector.push_back(FValue(map));
         LuaCBridge::getInstance()->executeFunctionByRetainId(handler, vector);
     });
@@ -222,9 +218,11 @@ bool Downloader::createSimgleTaskInterNal(string strUrl,string strPath,long luaC
     const char * url = strUrl.c_str();
     string tempPath = (strPath + ".download");
     FValueMap info = Downloader::getHttpInfo(url);
-    
+    int DOWNLOAD_FAILED = (int)LUA_CALLBACK_TYPE::DOWNLOAD_FAILED;
+    int DOWNLOAD_SUCCESS = (int)LUA_CALLBACK_TYPE::DOWNLOAD_SUCCESS;
     if(info.find("errormessage") != info.end()){
-        Downloader::reportDownloadErrorToLua(info["errormessage"].asString(),luaCallBack,strUrl,strPath);
+        
+        Downloader::reportDownloadInfoToLua(DOWNLOAD_FAILED,info["errormessage"].asString(),luaCallBack,strUrl,strPath);
         return false;
     }
     
@@ -245,14 +243,14 @@ bool Downloader::createSimgleTaskInterNal(string strUrl,string strPath,long luaC
         file = fopen(tempPath.c_str(),"ab+");
         if (file == NULL) {
             fclose(file);
-            Downloader::reportDownloadErrorToLua("Error opening file\n",luaCallBack,strUrl,strPath);
+            Downloader::reportDownloadInfoToLua(DOWNLOAD_FAILED,"Error opening file\n",luaCallBack,strUrl,strPath);
             return false;
         };
     }else{
         file = fopen(tempPath.c_str(),"wb");
         if (file == NULL) {
             fclose(file);
-            Downloader::reportDownloadErrorToLua("Error opening file\n",luaCallBack,strUrl,strPath);
+            Downloader::reportDownloadInfoToLua(DOWNLOAD_FAILED,"Error opening file\n",luaCallBack,strUrl,strPath);
             return false;
         };
     }
@@ -260,7 +258,7 @@ bool Downloader::createSimgleTaskInterNal(string strUrl,string strPath,long luaC
     CURL* curlHandle = curl_easy_init();
     if (nullptr == curlHandle){
         curl_easy_cleanup(curlHandle);
-        Downloader::reportDownloadErrorToLua("ERROR: Alloc curl handle failed.",luaCallBack,strUrl,strPath);
+        Downloader::reportDownloadInfoToLua(DOWNLOAD_FAILED,"ERROR: Alloc curl handle failed.",luaCallBack,strUrl,strPath);
 		return false;
     }
     //设置下载的url
@@ -319,7 +317,7 @@ bool Downloader::createSimgleTaskInterNal(string strUrl,string strPath,long luaC
 	CURLcode code = curl_easy_perform(curlHandle);
     if(CURLE_OK != code){
         erromessage = curl_easy_strerror(code);
-        Downloader::reportDownloadErrorToLua(erromessage,luaCallBack,strUrl,strPath);
+        Downloader::reportDownloadInfoToLua(DOWNLOAD_FAILED,erromessage,luaCallBack,strUrl,strPath);
         return false;
     }
  
@@ -328,16 +326,14 @@ bool Downloader::createSimgleTaskInterNal(string strUrl,string strPath,long luaC
     if ((code != CURLE_OK) || !(retcode >= 200 && retcode < 300) )
     {
         erromessage = curl_easy_strerror(code);
-        Downloader::reportDownloadErrorToLua(erromessage,luaCallBack,strUrl,strPath);
+        Downloader::reportDownloadInfoToLua(DOWNLOAD_FAILED,erromessage,luaCallBack,strUrl,strPath);
         return false;
     }
     curl_easy_cleanup(curlHandle);
     fclose(file);
-    
-    string oldPath = cocos2d::FileUtils::getInstance()->fullPathForFilename(tempPath);
-    string newPath = cocos2d::FileUtils::getInstance()->fullPathForFilename(strPath);
-    cocos2d::FileUtils::getInstance()->renameFile(oldPath, newPath);
-    Downloader::reportDownloadSuccessToLua(luaCallBack,strUrl,strPath);
+
+    cocos2d::FileUtils::getInstance()->renameFile(tempPath, strPath);
+    Downloader::reportDownloadInfoToLua(DOWNLOAD_SUCCESS,"",luaCallBack,strUrl,strPath);
     
     cocos2d::Scheduler *sched = cocos2d::Director::getInstance()->getScheduler();
     sched->performFunctionInCocosThread( [userdata](){
