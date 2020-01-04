@@ -10,7 +10,8 @@ class Downloader
     static bool createSimgleTaskInterNal(string url, string savePath, long processCallFunc);
     
     static Downloader* getInstance();
-    
+    static void reportDownloadErrorToLua(const string errormessage,int handler,string url,string savePath);
+    static void reportDownloadSuccessToLua(int handler,string url,string savePath);
     FValue createSimgleTask(FValueVector vector);
     static void registerFunc(){
         REG_OBJ_FUNC(Downloader::createSimgleTask,Downloader::getInstance(),Downloader::,"Downloader::createSimgleTask")

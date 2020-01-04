@@ -19,6 +19,7 @@ struct HeaderInfo{
 enum LUA_CALLBACK_TYPE{
     PROCESS,
     DOWNLOAD_FAILED,
+    DOWNLOAD_SUCCESS,
 };
 Downloader* Downloader::__instance = nullptr;
 long global_already_down = 0;
@@ -96,6 +97,8 @@ FValueMap Downloader::getHttpInfo(const char* url){
 
     curl_easy_setopt(curlHandle, CURLOPT_CONNECTTIMEOUT, DEFAULT_TIMEOUT);
     curl_easy_setopt(curlHandle, CURLOPT_TIMEOUT, DEFAULT_TIMEOUT);
+    curl_easy_setopt(curlHandle, CURLOPT_NOSIGNAL, 1);
+    
 
     //不验证SSL证书
 	curl_easy_setopt(curlHandle, CURLOPT_SSL_VERIFYPEER, false);
@@ -184,10 +187,40 @@ FValue Downloader::createSimgleTask(FValueVector vector){
     string savePath = vector[1].asString();
     long callFunc = vector[2].asFloat();
     
-    std::thread task(&Downloader::createSimgleTaskInterNal,url.c_str(),savePath,callFunc);
+    std::thread task(&Downloader::createSimgleTaskInterNal,url,savePath,callFunc);
     task.detach();
     return FValue(true);
 };
+
+void Downloader::reportDownloadErrorToLua(const string errormessage,int handler,string url,string savePath){
+    cocos2d::Scheduler *sched = cocos2d::Director::getInstance()->getScheduler();
+    string message = errormessage;
+    string urlPath = url;
+    string path = savePath;
+    sched->performFunctionInCocosThread( [=](){
+        FValueVector vector;
+        vector.push_back(FValue((int)LUA_CALLBACK_TYPE::DOWNLOAD_FAILED));
+        FValueMap map;
+        map["errormessage"] = FValue(message);
+        map["url"] = FValue(urlPath);
+        map["savePath"] = FValue(path);
+        vector.push_back(FValue(map));
+        LuaCBridge::getInstance()->executeFunctionByRetainId(handler, vector);
+    });
+}
+
+void Downloader::reportDownloadSuccessToLua(int handler,string url,string savePath){
+    cocos2d::Scheduler *sched = cocos2d::Director::getInstance()->getScheduler();
+    sched->performFunctionInCocosThread( [=](){
+        FValueVector vector;
+        vector.push_back(FValue((int)LUA_CALLBACK_TYPE::DOWNLOAD_SUCCESS));
+        FValueMap map;
+        map["url"] = FValue(url);
+        map["savePath"] = FValue(savePath);
+        vector.push_back(FValue(map));
+        LuaCBridge::getInstance()->executeFunctionByRetainId(handler, vector);
+    });
+}
 
 //easy系列接口使您可以通过同步和阻塞功能调用进行单次下载
 bool Downloader::createSimgleTaskInterNal(string param1,string param2,long luaCallBack){
@@ -196,12 +229,7 @@ bool Downloader::createSimgleTaskInterNal(string param1,string param2,long luaCa
     FValueMap info = Downloader::getHttpInfo(url);
     
     if(info.find("errormessage") != info.end()){
-        FValueVector vector;
-        vector.push_back(FValue((int)LUA_CALLBACK_TYPE::DOWNLOAD_FAILED));
-        FValueMap map;
-        map["errormessage"] = info["errormessage"];
-        vector.push_back(FValue(map));
-        LuaCBridge::getInstance()->executeFunctionByRetainId(luaCallBack, vector);
+        Downloader::reportDownloadErrorToLua(info["errormessage"].asString(),luaCallBack,param1,param2);
         return false;
     }
     
@@ -221,23 +249,23 @@ bool Downloader::createSimgleTaskInterNal(string param1,string param2,long luaCa
         }
         file = fopen(savePath,"ab+");
         if (file == NULL) {
-            printf("Error opening file\n");
             fclose(file);
+            Downloader::reportDownloadErrorToLua("Error opening file\n",luaCallBack,param1,param2);
             return false;
         };
     }else{
         file = fopen(savePath,"wb");
         if (file == NULL) {
-            printf("Error opening file\n");
             fclose(file);
+            Downloader::reportDownloadErrorToLua("Error opening file\n",luaCallBack,param1,param2);
             return false;
         };
     }
     //此句柄不可以在多线程共享
     CURL* curlHandle = curl_easy_init();
     if (nullptr == curlHandle){
-		printf("ERROR: Alloc curl handle failed.");
         curl_easy_cleanup(curlHandle);
+        Downloader::reportDownloadErrorToLua("ERROR: Alloc curl handle failed.",luaCallBack,param1,param2);
 		return false;
     }
     //设置下载的url
@@ -314,12 +342,10 @@ bool Downloader::createSimgleTaskInterNal(string param1,string param2,long luaCa
         delete userdata;
     });
     if(!result){
-        FValueVector vector;
-        vector.push_back(FValue((int)LUA_CALLBACK_TYPE::DOWNLOAD_FAILED));
-        FValueMap map;
-        map["errormessage"] = info["errormessage"];
-        vector.push_back(FValue(map));
-        LuaCBridge::getInstance()->executeFunctionByRetainId(luaCallBack, vector);
+        Downloader::reportDownloadErrorToLua(info["errormessage"].asString(),luaCallBack,param1,param2);
+    }else{
+        //将.download 文件改名
+        Downloader::reportDownloadSuccessToLua(luaCallBack,param1,param2);
     }
     
         

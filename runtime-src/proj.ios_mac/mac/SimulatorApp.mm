@@ -575,6 +575,17 @@ static void glfwDropFunc(GLFWwindow *window, int count, const char **files)
             [_fileHandle writeData:[str dataUsingEncoding:NSUTF8StringEncoding]];
         }
     }
+    if (!str)
+    {
+        str = @"encoding NSData to NSString error";
+        //show log to console
+        [_consoleController trace:str];
+        if(_fileHandle!=nil)
+        {
+            [_fileHandle writeData:[str dataUsingEncoding:NSUTF8StringEncoding]];
+        }
+    }
+    
 }
 
 - (void) setZoom:(float)scale

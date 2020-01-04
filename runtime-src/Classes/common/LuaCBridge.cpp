@@ -153,7 +153,7 @@ FValue LuaCBridge::executeFunctionByRetainId(int retainId, const FValueVector& v
         lua_pop(__state, 1);
         map["errorcode"] = FValue(-1);
         map["errormessage"] = FValue("NO_RETAIN_FUNC");
-        printf("NO_RETAIN_FUNC");
+        printf("NO_RETAIN_FUNC info= %s\n",FValue(vectorArgs).getDescription().c_str());
         return FValue(map);
     }
     
@@ -174,7 +174,7 @@ FValue LuaCBridge::executeFunctionByRetainId(int retainId, const FValueVector& v
         lua_pop(__state, 1);    // 将错误消息弹出栈顶
         map["errorcode"] = FValue(-2);
         map["errormessage"] = FValue("excute failed!!!");
-        printf("excute failed!!!");
+        printf("excute failed!!! info= %s\n",FValue(vectorArgs).getDescription().c_str());
         return FValue(map);
     }
     
