@@ -150,12 +150,16 @@ static int progressCURL(void* userdata, curl_off_t TotalToDownload, curl_off_t N
         TotalToDownload += data->alreadyDown;
         float process = (NowDownloaded) *1.0 / TotalToDownload * 100;
         int handler = data->luaHandler;
+        float nowDownloaded = (float)NowDownloaded;
+        float totalToDownload = (float)TotalToDownload;
         cocos2d::Scheduler *sched = cocos2d::Director::getInstance()->getScheduler();
         sched->performFunctionInCocosThread( [=](){
             FValueVector vector;
             vector.push_back(FValue((int)LUA_CALLBACK_TYPE::PROCESS));
             FValueMap map;
             map["process"] = FValue(process);
+            map["nowDownloaded"] = FValue(nowDownloaded);
+            map["totalToDownload"] = FValue(totalToDownload);
             vector.push_back(FValue(map));
             FValue ret = LuaCBridge::getInstance()->executeFunctionByRetainId(handler, vector);
             FValueMap retMap = ret.asFValueMap();
