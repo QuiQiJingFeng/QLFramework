@@ -4,8 +4,7 @@
 #include <unistd.h>
 #include "cocos2d.h"
 #include <thread>
-long DEFAULT_TIMEOUT = 10L;
-
+long CONNECT_TIME_OUT = 10L;
 struct UserData{
     long luaHandler = 0;
     long alreadyDown = 0;
@@ -95,10 +94,7 @@ FValueMap Downloader::getHttpInfo(const char* url){
     //不需求body
 	curl_easy_setopt(curlHandle, CURLOPT_NOBODY, true);
 
-    curl_easy_setopt(curlHandle, CURLOPT_CONNECTTIMEOUT, DEFAULT_TIMEOUT);
-    curl_easy_setopt(curlHandle, CURLOPT_TIMEOUT, DEFAULT_TIMEOUT);
-    curl_easy_setopt(curlHandle, CURLOPT_NOSIGNAL, 1);
-    
+    curl_easy_setopt(curlHandle, CURLOPT_CONNECTTIMEOUT, CONNECT_TIME_OUT);
 
     //不验证SSL证书
 	curl_easy_setopt(curlHandle, CURLOPT_SSL_VERIFYPEER, false);
@@ -294,9 +290,11 @@ bool Downloader::createSimgleTaskInterNal(string strUrl,string strPath,long luaC
 	curl_easy_setopt(curlHandle, CURLOPT_SSL_VERIFYPEER, false);
 	curl_easy_setopt(curlHandle, CURLOPT_SSL_VERIFYHOST, false);
     //超时
-    curl_easy_setopt(curlHandle, CURLOPT_CONNECTTIMEOUT, DEFAULT_TIMEOUT);
-    curl_easy_setopt(curlHandle, CURLOPT_TIMEOUT, DEFAULT_TIMEOUT);
-    curl_easy_setopt(curlHandle, CURLOPT_NOSIGNAL, 1);
+    curl_easy_setopt(curlHandle, CURLOPT_CONNECTTIMEOUT, CONNECT_TIME_OUT);
+    //去掉超时时间设置,因为大文件下载时间过长,这个普通的HTTP请求不同,所以不能设置这个
+    //否则文件一大就超时
+//    curl_easy_setopt(curlHandle, CURLOPT_TIMEOUT, DEFAULT_TIMEOUT);
+//    curl_easy_setopt(curlHandle, CURLOPT_NOSIGNAL, 1);
 
     //进度回调方法
     UserData* userdata = new UserData;
