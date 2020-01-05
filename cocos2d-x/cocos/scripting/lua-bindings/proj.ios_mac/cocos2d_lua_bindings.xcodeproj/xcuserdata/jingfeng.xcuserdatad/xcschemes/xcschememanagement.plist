@@ -7,7 +7,7 @@
 		<key>libluacocos2d Mac.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>4</integer>
+			<integer>5</integer>
 		</dict>
 		<key>libluacocos2d iOS.xcscheme</key>
 		<dict>

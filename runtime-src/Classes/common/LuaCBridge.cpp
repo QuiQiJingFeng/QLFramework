@@ -167,18 +167,12 @@ FValue LuaCBridge::executeFunctionByRetainId(int retainId, const FValueVector& v
     int errfunc = 0;     // 错误处理函数在栈中的索引 0表示没有错误处理函数
     int error = lua_pcall(__state, nargs, nresult, errfunc);
     if (error){
-        const char * error = luaL_checkstring(__state, -1);
-        const char * error2 = luaL_checkstring(__state, -2);
-        printf("pcall %s\n%s\n",error,error2);
-        //LOG 执行出错  =>  lua_tostring(state, - 1)
-        lua_pop(__state, 1);    // 将错误消息弹出栈顶
-        map["errorcode"] = FValue(-2);
-        map["errormessage"] = FValue("excute failed!!!");
-        printf("excute failed!!! info= %s\n",FValue(vectorArgs).getDescription().c_str());
-        return FValue(map);
+        printf("[LUA ERROR] %s\n", lua_tostring(__state, - 1));        /* L: ... error */
+        lua_pop(__state, 1); // remove error message from stack
+        return FValue(false);
     }
     
     map["result"] = parseStateParamaters();
-    
+    lua_settop(__state, 0);
     return FValue(map);
 }

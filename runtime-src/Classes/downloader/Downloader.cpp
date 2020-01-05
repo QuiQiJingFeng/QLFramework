@@ -135,7 +135,6 @@ static int progressCURL(void* userdata, curl_off_t TotalToDownload, curl_off_t N
      curl_off_t TotalToUpload, curl_off_t NowUploaded)
 {
     UserData* data = (UserData*) userdata;
-//    if(TotalToDownload == 0) TotalToDownload = data->fileLength;
     if(TotalToDownload != 0){
         NowDownloaded += data->alreadyDown;
         TotalToDownload += data->alreadyDown;
@@ -164,7 +163,7 @@ static int progressCURL(void* userdata, curl_off_t TotalToDownload, curl_off_t N
                 }
             }
         });
-        
+
         if(data->isCancel){
             return 1;
         }
@@ -185,26 +184,29 @@ FValue Downloader::createSimgleTask(FValueVector vector){
         Downloader::reportDownloadInfoToLua(LUA_CALLBACK_TYPE::FILE_EXIST, "file already exist", callFunc, url, savePath);
         return FValue(true);
     }
-    Downloader::createSimgleTaskInterNal(url,newPath,callFunc);
-//    std::thread task(&Downloader::createSimgleTaskInterNal,url,newPath,callFunc);
-//    task.detach();
+    std::thread task(&Downloader::createSimgleTaskInterNal,url,newPath,callFunc);
+    task.detach();
     return FValue(true);
 };
 
 void Downloader::reportDownloadInfoToLua(int type,const string errormessage,int handler,string url,string savePath){
     cocos2d::Scheduler *sched = cocos2d::Director::getInstance()->getScheduler();
-    string message = errormessage;
-    string urlPath = url;
-    string path = savePath;
+
     sched->performFunctionInCocosThread( [=](){
+        string message = errormessage;
+        string urlPath = url;
+        string path = savePath;
+        int ltype = type;
+        int luaFunc = handler;
         FValueVector vector;
-        vector.push_back(FValue(type));
+        vector.push_back(FValue(ltype));
         FValueMap map;
         map["errormessage"] = FValue(message);
         map["url"] = FValue(urlPath);
         map["savePath"] = FValue(path);
         vector.push_back(FValue(map));
-        LuaCBridge::getInstance()->executeFunctionByRetainId(handler, vector);
+        LuaCBridge::getInstance()->executeFunctionByRetainId(luaFunc, vector);
+        
     });
 }
 
@@ -213,15 +215,13 @@ bool Downloader::createSimgleTaskInterNal(string strUrl,string strPath,long luaC
     const char * url = strUrl.c_str();
     string tempPath = (strPath + ".download");
     FValueMap info = Downloader::getHttpInfo(url);
-    printf("1111111\n");
     int DOWNLOAD_FAILED = (int)LUA_CALLBACK_TYPE::DOWNLOAD_FAILED;
     int DOWNLOAD_SUCCESS = (int)LUA_CALLBACK_TYPE::DOWNLOAD_SUCCESS;
     if(info.find("errormessage") != info.end()){
-        
+
         Downloader::reportDownloadInfoToLua(DOWNLOAD_FAILED,info["errormessage"].asString(),luaCallBack,strUrl,strPath);
         return false;
     }
-    printf("2222222222222\n");
     FILE * file;
     long alreadydownload = 0;
     if(info["Accept-Ranges"].asBool()){
@@ -250,18 +250,16 @@ bool Downloader::createSimgleTaskInterNal(string strUrl,string strPath,long luaC
             return false;
         };
     }
-    printf("33333333333333\n");
     //此句柄不可以在多线程共享
     CURL* curlHandle = curl_easy_init();
     if (nullptr == curlHandle){
         curl_easy_cleanup(curlHandle);
         Downloader::reportDownloadInfoToLua(DOWNLOAD_FAILED,"ERROR: Alloc curl handle failed.",luaCallBack,strUrl,strPath);
-		return false;
+        return false;
     }
-    printf("4444444444444\n");
     //设置下载的url
     curl_easy_setopt(curlHandle, CURLOPT_URL,url);
-    
+
     if(info["Accept-Ranges"].asBool()){
         //断点重下载
         /*
@@ -277,11 +275,10 @@ bool Downloader::createSimgleTaskInterNal(string strUrl,string strPath,long luaC
         //sprintf(temp,"%ld-",alreadydownload);
         //curl_easy_setopt(curlHandle,CURLOPT_RANGE,temp);
     }
-    printf("5555555555555\n");
 //    //设置重定位URL，使用自动跳转，返回的头部中有Location(一般直接请求的url没找到)，则继续请求Location对应的数据
     curl_easy_setopt(curlHandle, CURLOPT_FOLLOWLOCATION, 1L);
     curl_easy_setopt(curlHandle, CURLOPT_MAXREDIRS,5);//查找次数，防止查找太深
-    
+
     //不验证SSL证书
     curl_easy_setopt(curlHandle, CURLOPT_SSL_VERIFYPEER, false);
     curl_easy_setopt(curlHandle, CURLOPT_SSL_VERIFYHOST, false);
@@ -297,11 +294,11 @@ bool Downloader::createSimgleTaskInterNal(string strUrl,string strPath,long luaC
     userdata->luaHandler = luaCallBack;
     userdata->alreadyDown = alreadydownload;
     userdata->fileLength = info["fileLength"].asFloat();
-    
+
     curl_easy_setopt(curlHandle, CURLOPT_XFERINFOFUNCTION, progressCURL);
     curl_easy_setopt(curlHandle, CURLOPT_XFERINFODATA, userdata);
     curl_easy_setopt(curlHandle, CURLOPT_NOPROGRESS, 0L);
-    
+
 #if(CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
     curl_easy_setopt(curlHandle, CURLOPT_WRITEFUNCTION, write_data);
 #else
@@ -314,13 +311,12 @@ bool Downloader::createSimgleTaskInterNal(string strUrl,string strPath,long luaC
     //使用这个属性可以在应用程序和libcurl调用的函数之间传递自定义数据
     curl_easy_setopt(curlHandle, CURLOPT_WRITEDATA, file);
     CURLcode code = curl_easy_perform(curlHandle);
-    
+
     if(CURLE_OK != code){
         erromessage = curl_easy_strerror(code);
         Downloader::reportDownloadInfoToLua(DOWNLOAD_FAILED,erromessage,luaCallBack,strUrl,strPath);
         return false;
     }
-     printf("777777777777\n");
     long retcode = 0;
     code = curl_easy_getinfo(curlHandle, CURLINFO_RESPONSE_CODE , &retcode);
     if ((code != CURLE_OK) || !(retcode >= 200 && retcode < 300) )
@@ -329,18 +325,12 @@ bool Downloader::createSimgleTaskInterNal(string strUrl,string strPath,long luaC
         Downloader::reportDownloadInfoToLua(DOWNLOAD_FAILED,erromessage,luaCallBack,strUrl,strPath);
         return false;
     }
-    printf("88888888888888\n");
     curl_easy_cleanup(curlHandle);
-    printf("9999999999999\n");
     fclose(file);
-    printf("XXXXXXXXXXXXXX\n");
     cocos2d::FileUtils::getInstance()->renameFile(tempPath, strPath);
-    printf("aaaaaaaaaaaaaa\n");
     Downloader::reportDownloadInfoToLua(DOWNLOAD_SUCCESS,"",luaCallBack,strUrl,strPath);
-    printf("bbbbbbbbbbbbbb\n");
     cocos2d::Scheduler *sched = cocos2d::Director::getInstance()->getScheduler();
     sched->performFunctionInCocosThread( [userdata](){
-        printf("delete userdata\n");
         delete userdata;
     });
     
