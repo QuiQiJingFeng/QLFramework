@@ -55,23 +55,12 @@ size_t write_data (void * buffer,size_t size,size_t nmemb,void * userp){
 
 static size_t header_callback(char* buffer,size_t size,size_t nitems,void* userdata){
     auto headerInfo = (HeaderInfo *)userdata;
-    if(headerInfo->ptr == nullptr){
-        headerInfo->ptr = new char[nitems * size];
-    }else{
-        char * temp = new char[headerInfo->size + nitems * size];
-        for (long i = 0; i < headerInfo->size; i++) {
-            temp[i] = headerInfo->ptr[i];
-        }
-        delete []headerInfo->ptr;
-        headerInfo->ptr = temp;
-    }
- 
-    
     for (long i = 0; i < nitems * size; i++) {
         headerInfo->ptr[headerInfo->size + i] = buffer[i];
     }
+    
     headerInfo->size += nitems * size;
-
+    headerInfo->ptr[headerInfo->size + 1] = '\0';
     return nitems * size;
 }
 
@@ -90,6 +79,8 @@ FValueMap Downloader::getHttpInfo(const char* url){
     //要求libcurl在写回调（CURLOPT_WRITEFUNCTION）中包含标头
     curl_easy_setopt(curlHandle,CURLOPT_HEADERFUNCTION,header_callback);
     HeaderInfo headerInfo;
+    char temp[1024];
+    headerInfo.ptr = temp;
     curl_easy_setopt(curlHandle, CURLOPT_WRITEHEADER,&headerInfo);
     
     //不需求body
@@ -136,7 +127,7 @@ FValueMap Downloader::getHttpInfo(const char* url){
     }else{
         map["Accept-Ranges"] = FValue(false);
     }
-    delete headerInfo.ptr;
+    
     return map;
 }
 
@@ -194,9 +185,9 @@ FValue Downloader::createSimgleTask(FValueVector vector){
         Downloader::reportDownloadInfoToLua(LUA_CALLBACK_TYPE::FILE_EXIST, "file already exist", callFunc, url, savePath);
         return FValue(true);
     }
-    
-    std::thread task(&Downloader::createSimgleTaskInterNal,url,newPath,callFunc);
-    task.detach();
+    Downloader::createSimgleTaskInterNal(url,newPath,callFunc);
+//    std::thread task(&Downloader::createSimgleTaskInterNal,url,newPath,callFunc);
+//    task.detach();
     return FValue(true);
 };
 
@@ -222,6 +213,7 @@ bool Downloader::createSimgleTaskInterNal(string strUrl,string strPath,long luaC
     const char * url = strUrl.c_str();
     string tempPath = (strPath + ".download");
     FValueMap info = Downloader::getHttpInfo(url);
+    printf("1111111\n");
     int DOWNLOAD_FAILED = (int)LUA_CALLBACK_TYPE::DOWNLOAD_FAILED;
     int DOWNLOAD_SUCCESS = (int)LUA_CALLBACK_TYPE::DOWNLOAD_SUCCESS;
     if(info.find("errormessage") != info.end()){
@@ -229,7 +221,7 @@ bool Downloader::createSimgleTaskInterNal(string strUrl,string strPath,long luaC
         Downloader::reportDownloadInfoToLua(DOWNLOAD_FAILED,info["errormessage"].asString(),luaCallBack,strUrl,strPath);
         return false;
     }
-    
+    printf("2222222222222\n");
     FILE * file;
     long alreadydownload = 0;
     if(info["Accept-Ranges"].asBool()){
@@ -258,6 +250,7 @@ bool Downloader::createSimgleTaskInterNal(string strUrl,string strPath,long luaC
             return false;
         };
     }
+    printf("33333333333333\n");
     //此句柄不可以在多线程共享
     CURL* curlHandle = curl_easy_init();
     if (nullptr == curlHandle){
@@ -265,6 +258,7 @@ bool Downloader::createSimgleTaskInterNal(string strUrl,string strPath,long luaC
         Downloader::reportDownloadInfoToLua(DOWNLOAD_FAILED,"ERROR: Alloc curl handle failed.",luaCallBack,strUrl,strPath);
 		return false;
     }
+    printf("4444444444444\n");
     //设置下载的url
     curl_easy_setopt(curlHandle, CURLOPT_URL,url);
     
@@ -283,14 +277,14 @@ bool Downloader::createSimgleTaskInterNal(string strUrl,string strPath,long luaC
         //sprintf(temp,"%ld-",alreadydownload);
         //curl_easy_setopt(curlHandle,CURLOPT_RANGE,temp);
     }
-    
-    //设置重定位URL，使用自动跳转，返回的头部中有Location(一般直接请求的url没找到)，则继续请求Location对应的数据
+    printf("5555555555555\n");
+//    //设置重定位URL，使用自动跳转，返回的头部中有Location(一般直接请求的url没找到)，则继续请求Location对应的数据
     curl_easy_setopt(curlHandle, CURLOPT_FOLLOWLOCATION, 1L);
     curl_easy_setopt(curlHandle, CURLOPT_MAXREDIRS,5);//查找次数，防止查找太深
     
     //不验证SSL证书
-	curl_easy_setopt(curlHandle, CURLOPT_SSL_VERIFYPEER, false);
-	curl_easy_setopt(curlHandle, CURLOPT_SSL_VERIFYHOST, false);
+    curl_easy_setopt(curlHandle, CURLOPT_SSL_VERIFYPEER, false);
+    curl_easy_setopt(curlHandle, CURLOPT_SSL_VERIFYHOST, false);
     //超时
     curl_easy_setopt(curlHandle, CURLOPT_CONNECTTIMEOUT, CONNECT_TIME_OUT);
     //去掉超时时间设置,因为大文件下载时间过长,这个普通的HTTP请求不同,所以不能设置这个
@@ -314,17 +308,19 @@ bool Downloader::createSimgleTaskInterNal(string strUrl,string strPath,long luaC
     //设置接收数据的方法如果不设置,那么libcurl将会默认将数据输出到stdout
     curl_easy_setopt(curlHandle,CURLOPT_WRITEDATA,write_data);
 #endif
+    printf("6666666666666\n");
     string erromessage;
     //设置write_data方法第四个参数获取的指针
     //使用这个属性可以在应用程序和libcurl调用的函数之间传递自定义数据
     curl_easy_setopt(curlHandle, CURLOPT_WRITEDATA, file);
-	CURLcode code = curl_easy_perform(curlHandle);
+    CURLcode code = curl_easy_perform(curlHandle);
+    
     if(CURLE_OK != code){
         erromessage = curl_easy_strerror(code);
         Downloader::reportDownloadInfoToLua(DOWNLOAD_FAILED,erromessage,luaCallBack,strUrl,strPath);
         return false;
     }
- 
+     printf("777777777777\n");
     long retcode = 0;
     code = curl_easy_getinfo(curlHandle, CURLINFO_RESPONSE_CODE , &retcode);
     if ((code != CURLE_OK) || !(retcode >= 200 && retcode < 300) )
@@ -333,17 +329,21 @@ bool Downloader::createSimgleTaskInterNal(string strUrl,string strPath,long luaC
         Downloader::reportDownloadInfoToLua(DOWNLOAD_FAILED,erromessage,luaCallBack,strUrl,strPath);
         return false;
     }
+    printf("88888888888888\n");
     curl_easy_cleanup(curlHandle);
+    printf("9999999999999\n");
     fclose(file);
-
+    printf("XXXXXXXXXXXXXX\n");
     cocos2d::FileUtils::getInstance()->renameFile(tempPath, strPath);
+    printf("aaaaaaaaaaaaaa\n");
     Downloader::reportDownloadInfoToLua(DOWNLOAD_SUCCESS,"",luaCallBack,strUrl,strPath);
-    
+    printf("bbbbbbbbbbbbbb\n");
     cocos2d::Scheduler *sched = cocos2d::Director::getInstance()->getScheduler();
     sched->performFunctionInCocosThread( [userdata](){
+        printf("delete userdata\n");
         delete userdata;
     });
-        
+    
     return true;
 }
 
