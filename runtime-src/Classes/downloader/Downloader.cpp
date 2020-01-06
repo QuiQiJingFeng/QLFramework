@@ -1,7 +1,13 @@
 #include "Downloader.h"
 #include <curl/curl.h>
 #include "LuaCBridge.h"
+#if(CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
+#include <io.h>
+#include <process.h>
+#else
 #include <unistd.h>
+#endif
+
 #include "cocos2d.h"
 #include <thread>
 long CONNECT_TIME_OUT = 10L;
@@ -66,6 +72,7 @@ static size_t header_callback(char* buffer,size_t size,size_t nitems,void* userd
 
 FValueMap Downloader::getHttpInfo(const char* url){
     FValueMap map;
+	map["aaa"] = FValue("aaa");
     //此句柄不可以在多线程共享
     CURL* curlHandle = curl_easy_init();
     if (nullptr == curlHandle){
@@ -178,7 +185,7 @@ FValue Downloader::createSimgleTask(FValueVector vector){
     long callFunc = vector[2].asFloat();
     string newPath = cocos2d::FileUtils::getInstance()->fullPathForFilename(savePath);
     
-    int result = access(newPath.c_str(), F_OK);
+    int result = access(newPath.c_str(), 0);
     //如果文件已经存在,返回false,提醒用户应该更换名字下载
     if(result == 0){
         Downloader::reportDownloadInfoToLua(LUA_CALLBACK_TYPE::FILE_EXIST, "file already exist", callFunc, url, savePath);
@@ -226,7 +233,7 @@ bool Downloader::createSimgleTaskInterNal(string strUrl,string strPath,long luaC
     long alreadydownload = 0;
     if(info["Accept-Ranges"].asBool()){
         //断点续传
-        int result = access((strPath + ".download").c_str(), F_OK);
+        int result = access((strPath + ".download").c_str(), 0);
         //如果文件已经存在,那么检测一下文件大小,用来做断点续传
         if(result == 0){
             FILE * file = fopen(tempPath.c_str(), "rb");
@@ -293,7 +300,7 @@ bool Downloader::createSimgleTaskInterNal(string strUrl,string strPath,long luaC
     UserData* userdata = new UserData;
     userdata->luaHandler = luaCallBack;
     userdata->alreadyDown = alreadydownload;
-    userdata->fileLength = info["fileLength"].asFloat();
+    userdata->fileLength = (long)info["fileLength"].asFloat();
 
     curl_easy_setopt(curlHandle, CURLOPT_XFERINFOFUNCTION, progressCURL);
     curl_easy_setopt(curlHandle, CURLOPT_XFERINFODATA, userdata);
@@ -305,7 +312,6 @@ bool Downloader::createSimgleTaskInterNal(string strUrl,string strPath,long luaC
     //设置接收数据的方法如果不设置,那么libcurl将会默认将数据输出到stdout
     curl_easy_setopt(curlHandle,CURLOPT_WRITEDATA,write_data);
 #endif
-    printf("6666666666666\n");
     string erromessage;
     //设置write_data方法第四个参数获取的指针
     //使用这个属性可以在应用程序和libcurl调用的函数之间传递自定义数据

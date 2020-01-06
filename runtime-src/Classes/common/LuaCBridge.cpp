@@ -146,7 +146,7 @@ FValue LuaCBridge::parseStateParamaters(){
 FValue LuaCBridge::executeFunctionByRetainId(int retainId, const FValueVector& vectorArgs)
 {
     FValueMap map;
-    map["errorcode"] = 0;
+    map["errorcode"] = FValue(0);;
     getFuncByRetainId(retainId); // -1 func
     if(!lua_isfunction(__state, -1)){
         //LOG retainId 没有绑定的方法
@@ -169,7 +169,8 @@ FValue LuaCBridge::executeFunctionByRetainId(int retainId, const FValueVector& v
     if (error){
         printf("[LUA ERROR] %s\n", lua_tostring(__state, - 1));        /* L: ... error */
         lua_pop(__state, 1); // remove error message from stack
-        return FValue(false);
+		map["errorcode"] = FValue(-1);
+        return FValue(map);
     }
     
     map["result"] = parseStateParamaters();
