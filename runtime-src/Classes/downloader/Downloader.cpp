@@ -1,6 +1,43 @@
 #include "Downloader.h"
 #include <curl/curl.h>
-int DEFAULT_TIMEOUT = 1000;
+#include "LuaCBridge.h"
+#if(CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
+#include <io.h>
+#include <process.h>
+#else
+#include <unistd.h>
+#endif
+
+#include "cocos2d.h"
+#include <thread>
+long CONNECT_TIME_OUT = 10L;
+struct UserData{
+    long luaHandler = 0;
+    long alreadyDown = 0;
+    long fileLength = 0;
+    bool isCancel = false;
+};
+struct HeaderInfo{
+    char * ptr = nullptr;
+    long size = 0;
+};
+enum LUA_CALLBACK_TYPE{
+    PROCESS,
+    DOWNLOAD_FAILED,
+    DOWNLOAD_SUCCESS,
+    FILE_EXIST,
+};
+Downloader* Downloader::__instance = nullptr;
+long global_already_down = 0;
+Downloader* Downloader::getInstance()
+{
+    if(__instance == nullptr){
+        __instance = new Downloader();
+    }
+    
+    return __instance;
+}
+
 void Downloader::init(){
     curl_global_init(CURL_GLOBAL_ALL);
 	curl_version_info_data* version_info = curl_version_info(CURLVERSION_NOW);
@@ -22,122 +59,291 @@ size_t write_data (void * buffer,size_t size,size_t nmemb,void * userp){
     return r_size;
 }
 
-bool Downloader::checkFileExist(const char* url){
+static size_t header_callback(char* buffer,size_t size,size_t nitems,void* userdata){
+    auto headerInfo = (HeaderInfo *)userdata;
+    for (long i = 0; i < nitems * size; i++) {
+        headerInfo->ptr[headerInfo->size + i] = buffer[i];
+    }
+    
+    headerInfo->size += nitems * size;
+    headerInfo->ptr[headerInfo->size + 1] = '\0';
+    return nitems * size;
+}
+
+FValueMap Downloader::getHttpInfo(const char* url){
+    FValueMap map;
+	map["aaa"] = FValue("aaa");
     //此句柄不可以在多线程共享
     CURL* curlHandle = curl_easy_init();
     if (nullptr == curlHandle){
-		printf("ERROR: Alloc curl handle failed.");
-		return false;
+        map["errormessage"] = FValue("ERROR: Alloc curl handle failed.");
+		return map;
     }
     //设置下载的url
     curl_easy_setopt(curlHandle, CURLOPT_URL,url);
-
+    //是否将http头写到CURLOPT_WRITEFUNCTION方法中 1是写入 0是不写入,默认为0
+    curl_easy_setopt(curlHandle, CURLOPT_HEADER, 0);
+    //要求libcurl在写回调（CURLOPT_WRITEFUNCTION）中包含标头
+    curl_easy_setopt(curlHandle,CURLOPT_HEADERFUNCTION,header_callback);
+    HeaderInfo headerInfo;
+    char temp[1024];
+    headerInfo.ptr = temp;
+    curl_easy_setopt(curlHandle, CURLOPT_WRITEHEADER,&headerInfo);
+    
     //不需求body
 	curl_easy_setopt(curlHandle, CURLOPT_NOBODY, true);
 
-    curl_easy_setopt(curlHandle, CURLOPT_CONNECTTIMEOUT, DEFAULT_TIMEOUT);
-    curl_easy_setopt(curlHandle, CURLOPT_TIMEOUT, DEFAULT_TIMEOUT);
+    curl_easy_setopt(curlHandle, CURLOPT_CONNECTTIMEOUT, CONNECT_TIME_OUT);
 
     //不验证SSL证书
-	curl_easy_setopt(curlHandle, CURLOPT_SSL_VERIFYPEER, FALSE);
-	curl_easy_setopt(curlHandle, CURLOPT_SSL_VERIFYHOST, FALSE);
+	curl_easy_setopt(curlHandle, CURLOPT_SSL_VERIFYPEER, false);
+	curl_easy_setopt(curlHandle, CURLOPT_SSL_VERIFYHOST, false);
 
-	int code = curl_easy_perform(curlHandle);
+	CURLcode code = curl_easy_perform(curlHandle);
     if(CURLE_OK != code){
-        printf("curl easy perform faild code = %d\n",code);
-        return false;
+        map["errormessage"] = FValue(curl_easy_strerror(code));
+        return map;
     }
 
     long retcode = 0;
-    if(CURLE_OK != curl_easy_getinfo(curlHandle, CURLINFO_RESPONSE_CODE , &retcode)){
-        return printf("CURLINFO_RESPONSE_CODE failed\n");
+    code = curl_easy_getinfo(curlHandle, CURLINFO_RESPONSE_CODE , &retcode);
+    if(CURLE_OK != code){
+        map["errormessage"] = FValue(curl_easy_strerror(code));
+        return map;
     }
-    if (retcode != 200){
-        printf("retcode = %d\n",retcode);
-        return false;
+    if (!(retcode >= 200 && retcode < 300)){
+        map["errormessage"] = FValue(curl_easy_strerror(code));
+        return map;
     }
-    return true;
+    
+    long fileLength = 0;
+    code = curl_easy_getinfo(curlHandle, CURLINFO_CONTENT_LENGTH_DOWNLOAD, &fileLength);
+    if(CURLE_OK == code){
+        map["fileLength"] = FValue((float)fileLength);
+    }else{
+        map["errormessage"] = FValue(curl_easy_strerror(code));
+        return map;
+    }
+    
+    string header = headerInfo.ptr;
+    string::size_type position;
+    position = header.find("Accept-Ranges: bytes");
+    if (position != std::string::npos)
+    {
+        map["Accept-Ranges"] = FValue(true);
+    }else{
+        map["Accept-Ranges"] = FValue(false);
+    }
+    
+    return map;
 }
 
 static int progressCURL(void* userdata, curl_off_t TotalToDownload, curl_off_t NowDownloaded, 
      curl_off_t TotalToUpload, curl_off_t NowUploaded)
 {
-    double* length = (double*) userdata;
-  fprintf(stderr, "UP: %" CURL_FORMAT_CURL_OFF_T " of %" CURL_FORMAT_CURL_OFF_T
-          "  DOWN: %" CURL_FORMAT_CURL_OFF_T " of %" CURL_FORMAT_CURL_OFF_T
-          "\r\n",
-	  NowUploaded, TotalToUpload, NowDownloaded, TotalToDownload);
- 
-  //如果想要取消,返回�?值即�?
+    UserData* data = (UserData*) userdata;
+    if(TotalToDownload != 0){
+        NowDownloaded += data->alreadyDown;
+        TotalToDownload += data->alreadyDown;
+        float process = (NowDownloaded) *1.0 / TotalToDownload * 100;
+        int handler = data->luaHandler;
+        float nowDownloaded = (float)NowDownloaded;
+        float totalToDownload = (float)TotalToDownload;
+        cocos2d::Scheduler *sched = cocos2d::Director::getInstance()->getScheduler();
+        sched->performFunctionInCocosThread( [=](){
+            FValueVector vector;
+            vector.push_back(FValue((int)LUA_CALLBACK_TYPE::PROCESS));
+            FValueMap map;
+            map["process"] = FValue(process);
+            map["nowDownloaded"] = FValue(nowDownloaded);
+            map["totalToDownload"] = FValue(totalToDownload);
+            vector.push_back(FValue(map));
+            FValue ret = LuaCBridge::getInstance()->executeFunctionByRetainId(handler, vector);
+            FValueMap retMap = ret.asFValueMap();
+            if(retMap["errorcode"].asInt() == 0){
+                //返回非0值会撤销任务
+                if(!retMap["result"].isNull()){
+                    bool isCalcel = retMap["result"].asBool();
+                    if(isCalcel){
+                        data->isCancel = true;
+                    }
+                }
+            }
+        });
 
+        if(data->isCancel){
+            return 1;
+        }
+    }
   return 0;
 }
 
 
-//https://curl.haxx.se/libcurl/c/getinmemory.html
-//easy系列接口使您可以通过同步和阻塞功能调用进行单次下�?
-bool Downloader::curlTest(const char* url,const char* savePath,double* length){
-    FILE * file;
-	file = fopen (savePath,"wb+");
-    if (file == NULL) {
-        printf("Error opening file\n");
-        return false;
-    };
+FValue Downloader::createSimgleTask(FValueVector vector){
+    string url = vector[0].asString();
+    string savePath = vector[1].asString();
+    long callFunc = vector[2].asFloat();
+    string newPath = cocos2d::FileUtils::getInstance()->fullPathForFilename(savePath);
+    
+    int result = access(newPath.c_str(), 0);
+    //如果文件已经存在,返回false,提醒用户应该更换名字下载
+    if(result == 0){
+        Downloader::reportDownloadInfoToLua(LUA_CALLBACK_TYPE::FILE_EXIST, "file already exist", callFunc, url, savePath);
+        return FValue(true);
+    }
+    std::thread task(&Downloader::createSimgleTaskInterNal,url,newPath,callFunc);
+    task.detach();
+    return FValue(true);
+};
 
+void Downloader::reportDownloadInfoToLua(int type,const string errormessage,int handler,string url,string savePath){
+    cocos2d::Scheduler *sched = cocos2d::Director::getInstance()->getScheduler();
+
+    sched->performFunctionInCocosThread( [=](){
+        string message = errormessage;
+        string urlPath = url;
+        string path = savePath;
+        int ltype = type;
+        int luaFunc = handler;
+        FValueVector vector;
+        vector.push_back(FValue(ltype));
+        FValueMap map;
+        map["errormessage"] = FValue(message);
+        map["url"] = FValue(urlPath);
+        map["savePath"] = FValue(path);
+        vector.push_back(FValue(map));
+        LuaCBridge::getInstance()->executeFunctionByRetainId(luaFunc, vector);
+        
+    });
+}
+
+//easy系列接口使您可以通过同步和阻塞功能调用进行单次下载
+bool Downloader::createSimgleTaskInterNal(string strUrl,string strPath,long luaCallBack){
+    const char * url = strUrl.c_str();
+    string tempPath = (strPath + ".download");
+    FValueMap info = Downloader::getHttpInfo(url);
+    int DOWNLOAD_FAILED = (int)LUA_CALLBACK_TYPE::DOWNLOAD_FAILED;
+    int DOWNLOAD_SUCCESS = (int)LUA_CALLBACK_TYPE::DOWNLOAD_SUCCESS;
+    if(info.find("errormessage") != info.end()){
+
+        Downloader::reportDownloadInfoToLua(DOWNLOAD_FAILED,info["errormessage"].asString(),luaCallBack,strUrl,strPath);
+        return false;
+    }
+    FILE * file;
+    long alreadydownload = 0;
+    if(info["Accept-Ranges"].asBool()){
+        //断点续传
+        int result = access((strPath + ".download").c_str(), 0);
+        //如果文件已经存在,那么检测一下文件大小,用来做断点续传
+        if(result == 0){
+            FILE * file = fopen(tempPath.c_str(), "rb");
+            fseek(file,0,SEEK_END);
+            long size = ftell(file);
+            alreadydownload = size;
+            global_already_down = size;
+            fclose(file);
+        }
+        file = fopen(tempPath.c_str(),"ab+");
+        if (file == NULL) {
+            fclose(file);
+            Downloader::reportDownloadInfoToLua(DOWNLOAD_FAILED,"Error opening file\n",luaCallBack,strUrl,strPath);
+            return false;
+        };
+    }else{
+        file = fopen(tempPath.c_str(),"wb");
+        if (file == NULL) {
+            fclose(file);
+            Downloader::reportDownloadInfoToLua(DOWNLOAD_FAILED,"Error opening file\n",luaCallBack,strUrl,strPath);
+            return false;
+        };
+    }
     //此句柄不可以在多线程共享
     CURL* curlHandle = curl_easy_init();
     if (nullptr == curlHandle){
-		printf("ERROR: Alloc curl handle failed.");
         curl_easy_cleanup(curlHandle);
-		return false;
+        Downloader::reportDownloadInfoToLua(DOWNLOAD_FAILED,"ERROR: Alloc curl handle failed.",luaCallBack,strUrl,strPath);
+        return false;
     }
     //设置下载的url
     curl_easy_setopt(curlHandle, CURLOPT_URL,url);
-    //不验证SSL证书
-	curl_easy_setopt(curlHandle, CURLOPT_SSL_VERIFYPEER, FALSE);
-	curl_easy_setopt(curlHandle, CURLOPT_SSL_VERIFYHOST, FALSE);
-    //超时
-    curl_easy_setopt(curlHandle, CURLOPT_CONNECTTIMEOUT, DEFAULT_TIMEOUT);
-    curl_easy_setopt(curlHandle, CURLOPT_TIMEOUT, DEFAULT_TIMEOUT);
 
-    //https://curl.haxx.se/libcurl/c/progressfunc.html
+    if(info["Accept-Ranges"].asBool()){
+        //断点重下载
+        /*
+         分别测试了三种情况,一种是不支持断点续传的 比如用python 一键搭建的静态服务器
+         一种是只支持CURLOPT_RANGE的,比如阿里云的OSS
+         一种是两个都支持的 比如我用nodejs的express框架搭建的一个web服务器
+         因为要做一个通用的下载器,所以这些情况必须要区分出来,否则很容易导致curl返回一个不支持的错误码
+         */
+        //方式1
+        curl_easy_setopt(curlHandle, CURLOPT_RESUME_FROM_LARGE, (curl_off_t)alreadydownload);
+        //方式2
+        //char temp[100];
+        //sprintf(temp,"%ld-",alreadydownload);
+        //curl_easy_setopt(curlHandle,CURLOPT_RANGE,temp);
+    }
+//    //设置重定位URL，使用自动跳转，返回的头部中有Location(一般直接请求的url没找到)，则继续请求Location对应的数据
+    curl_easy_setopt(curlHandle, CURLOPT_FOLLOWLOCATION, 1L);
+    curl_easy_setopt(curlHandle, CURLOPT_MAXREDIRS,5);//查找次数，防止查找太深
+
+    //不验证SSL证书
+    curl_easy_setopt(curlHandle, CURLOPT_SSL_VERIFYPEER, false);
+    curl_easy_setopt(curlHandle, CURLOPT_SSL_VERIFYHOST, false);
+    //超时
+    curl_easy_setopt(curlHandle, CURLOPT_CONNECTTIMEOUT, CONNECT_TIME_OUT);
+    //去掉超时时间设置,因为大文件下载时间过长,这个普通的HTTP请求不同,所以不能设置这个
+    //否则文件一大就超时
+//    curl_easy_setopt(curlHandle, CURLOPT_TIMEOUT, DEFAULT_TIMEOUT);
+//    curl_easy_setopt(curlHandle, CURLOPT_NOSIGNAL, 1);
+
     //进度回调方法
+    UserData* userdata = new UserData;
+    userdata->luaHandler = luaCallBack;
+    userdata->alreadyDown = alreadydownload;
+    userdata->fileLength = (long)info["fileLength"].asFloat();
+
     curl_easy_setopt(curlHandle, CURLOPT_XFERINFOFUNCTION, progressCURL);
-    curl_easy_setopt(curlHandle, CURLOPT_XFERINFODATA, length);
+    curl_easy_setopt(curlHandle, CURLOPT_XFERINFODATA, userdata);
     curl_easy_setopt(curlHandle, CURLOPT_NOPROGRESS, 0L);
-    
+
 #if(CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
     curl_easy_setopt(curlHandle, CURLOPT_WRITEFUNCTION, write_data);
-#elif
+#else
     //设置接收数据的方法如果不设置,那么libcurl将会默认将数据输出到stdout
     curl_easy_setopt(curlHandle,CURLOPT_WRITEDATA,write_data);
 #endif
-
+    string erromessage;
     //设置write_data方法第四个参数获取的指针
     //使用这个属性可以在应用程序和libcurl调用的函数之间传递自定义数据
     curl_easy_setopt(curlHandle, CURLOPT_WRITEDATA, file);
-	int code = curl_easy_perform(curlHandle);
-    if(CURLE_OK != code){
-        printf("curl easy perform faild code = %d\n",code);
-        curl_easy_cleanup(curlHandle);
-        return false;
-    }
+    CURLcode code = curl_easy_perform(curlHandle);
 
-    long retcode = 0;
-    code = curl_easy_getinfo(curlHandle, CURLINFO_RESPONSE_CODE , &retcode); 
-    if ( (code == CURLE_OK) && retcode != 200 )
-    {
-        curl_easy_cleanup(curlHandle);
-        fclose(file);
+    if(CURLE_OK != code){
+        erromessage = curl_easy_strerror(code);
+        Downloader::reportDownloadInfoToLua(DOWNLOAD_FAILED,erromessage,luaCallBack,strUrl,strPath);
         return false;
     }
-    printf("download success\n");
+    long retcode = 0;
+    code = curl_easy_getinfo(curlHandle, CURLINFO_RESPONSE_CODE , &retcode);
+    if ((code != CURLE_OK) || !(retcode >= 200 && retcode < 300) )
+    {
+        erromessage = curl_easy_strerror(code);
+        Downloader::reportDownloadInfoToLua(DOWNLOAD_FAILED,erromessage,luaCallBack,strUrl,strPath);
+        return false;
+    }
     curl_easy_cleanup(curlHandle);
     fclose(file);
+    cocos2d::FileUtils::getInstance()->renameFile(tempPath, strPath);
+    Downloader::reportDownloadInfoToLua(DOWNLOAD_SUCCESS,"",luaCallBack,strUrl,strPath);
+    cocos2d::Scheduler *sched = cocos2d::Director::getInstance()->getScheduler();
+    sched->performFunctionInCocosThread( [userdata](){
+        delete userdata;
+    });
+    
     return true;
 }
 
-/*  单文件下�?
+/*  单文件下载
     Downloader::init();
     char* url = "https://lsjgame.oss-cn-hongkong.aliyuncs.com/1.0.5/package_src_test.zip";
     FILE * pFile;

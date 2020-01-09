@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		141562BA23BFD5C70004C123 /* Downloader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 141562B823BFD5C70004C123 /* Downloader.cpp */; };
+		141562BB23BFD5C70004C123 /* Downloader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 141562B823BFD5C70004C123 /* Downloader.cpp */; };
 		14174652239D50F400276236 /* package in Resources */ = {isa = PBXBuildFile; fileRef = 14174651239D50F400276236 /* package */; };
 		141D67F5238A97D100FB1AC4 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 141D67F4238A97D100FB1AC4 /* CoreLocation.framework */; };
 		141D67F7238A97DA00FB1AC4 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 141D67F6238A97DA00FB1AC4 /* SystemConfiguration.framework */; };
@@ -17,6 +19,7 @@
 		141D6801238A99A500FB1AC4 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 141D6800238A99A500FB1AC4 /* AdSupport.framework */; };
 		141D6807238A9D2100FB1AC4 /* BaiduLocationService.mm in Sources */ = {isa = PBXBuildFile; fileRef = 141D6806238A9D2100FB1AC4 /* BaiduLocationService.mm */; };
 		141D6809238AE08200FB1AC4 /* GameController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 141D6808238AE08100FB1AC4 /* GameController.framework */; };
+		143144FB23C23AE80026A641 /* libcurl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 143144F923C23AD10026A641 /* libcurl.a */; };
 		145E5332239D490E00920E1F /* FValue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 145E5325239D490E00920E1F /* FValue.cpp */; };
 		145E5333239D490E00920E1F /* FValue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 145E5325239D490E00920E1F /* FValue.cpp */; };
 		145E5334239D490E00920E1F /* FYDC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 145E5327239D490E00920E1F /* FYDC.cpp */; };
@@ -195,6 +198,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		141562B823BFD5C70004C123 /* Downloader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Downloader.cpp; sourceTree = "<group>"; };
+		141562B923BFD5C70004C123 /* Downloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Downloader.h; sourceTree = "<group>"; };
 		14174651239D50F400276236 /* package */ = {isa = PBXFileReference; lastKnownFileType = folder; name = package; path = ../../../package; sourceTree = "<group>"; };
 		141D67F0238A97A400FB1AC4 /* BMKLocationKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BMKLocationKit.framework; path = ../../BaiduLoc_iOSSDK_All_Bitcode_v1.8/BMKLocationKit.framework; sourceTree = "<group>"; };
 		141D67F4238A97D100FB1AC4 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS11.2.sdk/System/Library/Frameworks/CoreLocation.framework; sourceTree = DEVELOPER_DIR; };
@@ -207,6 +212,7 @@
 		141D6805238A9D2100FB1AC4 /* BaiduLocationService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaiduLocationService.h; sourceTree = "<group>"; };
 		141D6806238A9D2100FB1AC4 /* BaiduLocationService.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = BaiduLocationService.mm; sourceTree = "<group>"; };
 		141D6808238AE08100FB1AC4 /* GameController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameController.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS11.2.sdk/System/Library/Frameworks/GameController.framework; sourceTree = DEVELOPER_DIR; };
+		143144F923C23AD10026A641 /* libcurl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcurl.a; path = "../../cocos2d-x/external/curl/prebuilt/ios/libcurl.a"; sourceTree = "<group>"; };
 		145E5325239D490E00920E1F /* FValue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FValue.cpp; sourceTree = "<group>"; };
 		145E5326239D490E00920E1F /* FValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FValue.h; sourceTree = "<group>"; };
 		145E5327239D490E00920E1F /* FYDC.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FYDC.cpp; sourceTree = "<group>"; };
@@ -311,6 +317,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				143144FB23C23AE80026A641 /* libcurl.a in Frameworks */,
 				14EA0C8A239CFA1D00DD41F9 /* BMKLocationKit.framework in Frameworks */,
 				141D6809238AE08200FB1AC4 /* GameController.framework in Frameworks */,
 				141D6801238A99A500FB1AC4 /* AdSupport.framework in Frameworks */,
@@ -344,6 +351,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		141562B723BFD5C70004C123 /* downloader */ = {
+			isa = PBXGroup;
+			children = (
+				141562B823BFD5C70004C123 /* Downloader.cpp */,
+				141562B923BFD5C70004C123 /* Downloader.h */,
+			);
+			name = downloader;
+			path = ../Classes/downloader;
+			sourceTree = "<group>";
+		};
 		141D6802238A9C8D00FB1AC4 /* SDK */ = {
 			isa = PBXGroup;
 			children = (
@@ -513,6 +530,7 @@
 		F293B3CB15EB7BE500256477 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				143144F923C23AD10026A641 /* libcurl.a */,
 				14EA0C89239CFA1D00DD41F9 /* BMKLocationKit.framework */,
 				141D6808238AE08100FB1AC4 /* GameController.framework */,
 				141D6800238A99A500FB1AC4 /* AdSupport.framework */,
@@ -554,6 +572,7 @@
 		F293BB7C15EB830F00256477 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				141562B723BFD5C70004C123 /* downloader */,
 				14C4A101239FF50F00D19B91 /* bit */,
 				14C4A0FE239FF50F00D19B91 /* crypt */,
 				14C4A103239FF50F00D19B91 /* md5 */,
@@ -783,6 +802,7 @@
 				145E5337239D490E00920E1F /* JSONManager.cpp in Sources */,
 				14C6CA0C239219D100D472F1 /* pb.c in Sources */,
 				14C4A108239FF50F00D19B91 /* lsha1.c in Sources */,
+				141562BB23BFD5C70004C123 /* Downloader.cpp in Sources */,
 				C07828F818B4D72E00BD2287 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -794,6 +814,7 @@
 				5023812517EBBCAC00990C9B /* RootViewController.mm in Sources */,
 				F293BB9C15EB831F00256477 /* AppDelegate.cpp in Sources */,
 				5023812417EBBCAC00990C9B /* main.m in Sources */,
+				141562BA23BFD5C70004C123 /* Downloader.cpp in Sources */,
 				14C6CA0B239219D100D472F1 /* pb.c in Sources */,
 				145E5332239D490E00920E1F /* FValue.cpp in Sources */,
 				14C4A10B239FF50F00D19B91 /* bit.c in Sources */,
@@ -1003,10 +1024,11 @@
 					"$(SRCROOT)/../Classes/protobuf-lite",
 					"$(SRCROOT)/../Classes",
 					"$(SRCROOT)/../../cocos2d-x/tools/simulator/libsimulator/lib",
+					"$(SRCROOT)/../../cocos2d-x/external/curl/include/ios",
 				);
 				INFOPLIST_FILE = ios/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
-				LIBRARY_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = "/Users/jingfeng/Desktop/QLClient/client-slgc/frameworks/cocos2d-x/external/curl/prebuilt/ios";
 				OTHER_LDFLAGS = (
 					"$(_COCOS_LIB_IOS_BEGIN)",
 					"$(_COCOS_LIB_IOS_END)",
@@ -1045,10 +1067,11 @@
 					"$(SRCROOT)/../Classes/protobuf-lite",
 					"$(SRCROOT)/../Classes",
 					"$(SRCROOT)/../../cocos2d-x/tools/simulator/libsimulator/lib",
+					"$(SRCROOT)/../../cocos2d-x/external/curl/include/ios",
 				);
 				INFOPLIST_FILE = ios/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
-				LIBRARY_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = "/Users/jingfeng/Desktop/QLClient/client-slgc/frameworks/cocos2d-x/external/curl/prebuilt/ios";
 				OTHER_LDFLAGS = (
 					"$(_COCOS_LIB_IOS_BEGIN)",
 					"$(_COCOS_LIB_IOS_END)",

@@ -145,11 +145,16 @@ FValue LuaCBridge::parseStateParamaters(){
 
 FValue LuaCBridge::executeFunctionByRetainId(int retainId, const FValueVector& vectorArgs)
 {
+    FValueMap map;
+    map["errorcode"] = FValue(0);;
     getFuncByRetainId(retainId); // -1 func
     if(!lua_isfunction(__state, -1)){
         //LOG retainId 没有绑定的方法
         lua_pop(__state, 1);
-        return FValue("NO_RETAIN_FUNC");
+        map["errorcode"] = FValue(-1);
+        map["errormessage"] = FValue("NO_RETAIN_FUNC");
+        printf("NO_RETAIN_FUNC info= %s\n",FValue(vectorArgs).getDescription().c_str());
+        return FValue(map);
     }
     
     for(FValue value:vectorArgs){
@@ -162,15 +167,13 @@ FValue LuaCBridge::executeFunctionByRetainId(int retainId, const FValueVector& v
     int errfunc = 0;     // 错误处理函数在栈中的索引 0表示没有错误处理函数
     int error = lua_pcall(__state, nargs, nresult, errfunc);
     if (error){
-        const char * error = luaL_checkstring(__state, -1);
-        const char * error2 = luaL_checkstring(__state, -2);
-        printf("pcall %s\n%s\n",error,error2);
-        //LOG 执行出错  =>  lua_tostring(state, - 1)
-        lua_pop(__state, 1);    // 将错误消息弹出栈顶
-        return FValue("excute failed!!!");
+        printf("[LUA ERROR] %s\n", lua_tostring(__state, - 1));        /* L: ... error */
+        lua_pop(__state, 1); // remove error message from stack
+		map["errorcode"] = FValue(-1);
+        return FValue(map);
     }
     
-    FValue ret = parseStateParamaters();
-    
-    return ret;
+    map["result"] = parseStateParamaters();
+    lua_settop(__state, 0);
+    return FValue(map);
 }

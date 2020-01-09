@@ -10,7 +10,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../cocos2d-x/extensions/assets-manager/AssetsManagerEx.cpp"
-            timestampString = "597774501.0707181"
+            timestampString = "599932494.128593"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "585"
@@ -26,7 +26,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../cocos2d-x/extensions/assets-manager/AssetsManagerEx.cpp"
-            timestampString = "597774501.071314"
+            timestampString = "599932494.129151"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "653"
@@ -42,60 +42,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../cocos2d-x/extensions/assets-manager/AssetsManagerEx.cpp"
-            timestampString = "597774501.071618"
+            timestampString = "599932494.12951"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "829"
             endingLineNumber = "829"
             landmarkName = "AssetsManagerEx::checkUpdate()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "../../cocos2d-x/extensions/assets-manager/AssetsManagerEx.cpp"
-            timestampString = "597774501.071908"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "519"
-            endingLineNumber = "519"
-            landmarkName = "AssetsManagerEx::dispatchUpdateEvent(EventAssetsManagerEx::EventCode code, const std::string &amp;assetId/* = &quot;&quot;*/, const std::string &amp;message/* = &quot;&quot;*/, int curle_code/* = CURLE_OK*/, int curlm_code"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "../Classes/common/Utils.cpp"
-            timestampString = "597854375.349907"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "230"
-            endingLineNumber = "230"
-            landmarkName = "Utils::unzipFile(FValueVector vector)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "../../cocos2d-x/cocos/2d/CCSpriteFrameCache.cpp"
-            timestampString = "597854737.74099"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "544"
-            endingLineNumber = "544"
-            landmarkName = "SpriteFrameCache::getSpriteFrameByName(const std::string&amp; name)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

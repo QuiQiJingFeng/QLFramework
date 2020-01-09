@@ -9,10 +9,12 @@
 #include "FYDC.h"
 #include "LuaCBridge.h"
 #include "Utils.h"
+#include "Downloader.h"
 
 //所有需要被框架调用到的C++的方法,必须在这里进行注册
 void registerCplusFuncList(){
     Utils::getInstance()->registerFunc();
+    Downloader::getInstance()->registerFunc();
 }
 
 
@@ -57,7 +59,6 @@ int excuteFYDC(lua_State* L){
     }
     
     FValue ret = value(values);
-    
     if(!ret.isNull()){
         LuaCBridge::getInstance(L)->pushValueToStack(ret);
         return 1;

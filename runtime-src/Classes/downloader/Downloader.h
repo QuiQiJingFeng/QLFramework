@@ -1,9 +1,26 @@
 #include <stdio.h>
+#include "FYDC.h"
+
 class Downloader
 {
     public:
     static void init();
     static void dispose();
-	static bool checkFileExist(const char* url);
-    static bool curlTest(const char* url, const char* savePath, double* length);
+	static FValueMap getHttpInfo(const char* url);
+    static bool createSimgleTaskInterNal(string url, string savePath, long processCallFunc);
+    
+    static Downloader* getInstance();
+    static void reportDownloadInfoToLua(int type,const string errormessage,int handler,string url,string savePath);
+    FValue createSimgleTask(FValueVector vector);
+    static void registerFunc(){
+        REG_OBJ_FUNC(Downloader::createSimgleTask,Downloader::getInstance(),Downloader::,"Downloader::createSimgleTask")
+    };
+    ~Downloader(){
+        Downloader::dispose();
+    }
+private:
+    static Downloader* __instance;
+    Downloader(){
+        Downloader::init();
+    };
 };
