@@ -1,11 +1,12 @@
 #include "Downloader.h"
 #include <curl/curl.h>
 #include "LuaCBridge.h"
-#if(CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
-#include <io.h>
-#include <process.h>
+
+#if defined(_WIN32) && defined(_WINDOWS)
+    #include <io.h>
+    #include <process.h>
 #else
-#include <unistd.h>
+    #include <unistd.h>
 #endif
 
 #include "cocos2d.h"

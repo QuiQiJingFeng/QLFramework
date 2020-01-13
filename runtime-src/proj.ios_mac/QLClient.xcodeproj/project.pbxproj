@@ -637,7 +637,11 @@
 			attributes = {
 				LastUpgradeCheck = 0500;
 				TargetAttributes = {
+					5023812617EBBCE400990C9B = {
+						DevelopmentTeam = QDSGKRU66Z;
+					};
 					F293B3C715EB7BE500256477 = {
+						DevelopmentTeam = QDSGKRU66Z;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 0;
@@ -651,6 +655,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 				"zh-Hans",
@@ -963,6 +968,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = QDSGKRU66Z;
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -989,6 +995,7 @@
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
+				DEVELOPMENT_TEAM = QDSGKRU66Z;
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					NDEBUG,

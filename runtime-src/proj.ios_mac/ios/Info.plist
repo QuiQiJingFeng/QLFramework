@@ -7,6 +7,11 @@
 		<key>Allow Aribitrary Loads</key>
 		<true/>
 	</dict>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+	    <key>NSAllowsArbitraryLoads</key>
+	    <false/>
+	</dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleDisplayName</key>
